@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -25,4 +26,5 @@ public class AccountBank {
     Client client;
     Long solde;
     Long decouvert;
+    LocalDateTime dateCreation;
 }

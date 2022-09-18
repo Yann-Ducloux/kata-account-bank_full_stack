@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -25,4 +27,5 @@ public class Operation {
     AccountBank accountBank;
     Long somme;
     TypeOperation typeOperation;
+    LocalDateTime dateOperation;
 }
