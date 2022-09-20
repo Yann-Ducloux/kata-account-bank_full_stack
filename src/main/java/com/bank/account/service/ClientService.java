@@ -4,6 +4,7 @@ import com.bank.account.dto.ClientChangePassewordDTO;
 import com.bank.account.dto.ClientDTO;
 import com.bank.account.dto.ClientFullDTO;
 import com.bank.account.entity.Client;
+import com.bank.account.exception.ClientMaiExistException;
 import com.bank.account.exception.ClientNotFoundException;
 import com.bank.account.exception.ClientPasswordFalseException;
 import com.bank.account.repository.ClientRepository;
@@ -43,8 +44,12 @@ public class ClientService {
     }
 
     public ClientDTO saveClient(ClientFullDTO clientFullDTO) {
+        if (clientRepository.existsByMail(clientFullDTO.getMail())) {
+            throw new ClientMaiExistException(clientFullDTO.getMail());
+        }
         clientFullDTO.setPassword(hashPassword(clientFullDTO.getPassword()));
         Client client = modelMapper.map(clientFullDTO, Client.class);
+        client = clientRepository.save(client);
         return modelMapper.map(clientRepository.save(client), ClientDTO.class);
     }
 

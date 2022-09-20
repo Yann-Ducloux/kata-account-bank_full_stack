@@ -1,6 +1,5 @@
 package com.bank.account.dto;
 
-import com.bank.account.entity.AccountBank;
 import com.bank.account.enumeration.TypeOperation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OperationDTO {
+public class RecuDTO {
     Long idAccountBank;
     Long somme;
     TypeOperation typeOperation;
+    LocalDateTime dateOperation;
 }

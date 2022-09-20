@@ -20,7 +20,7 @@ public class Client {
 
     private @Id @GeneratedValue
     Long id;
-    private String mail;
+    String mail;
     private String nom;
     private String prenom;
     private String password;
