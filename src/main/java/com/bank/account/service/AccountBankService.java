@@ -35,7 +35,6 @@ public class AccountBankService {
 
 
     public List<AccountBankFullDTO> getAllAccountBank(String mail) {
-        List<Client> clientList = clientRepository.findByMail(mail);
         List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
         return accountBanks.stream()
                 .map(accountBank -> modelMapper.map(accountBank, AccountBankFullDTO.class))

@@ -1,7 +1,6 @@
 package com.bank.account.controller;
 
-import com.bank.account.dto.OperationDTO;
-import com.bank.account.dto.RecuDTO;
+import com.bank.account.dto.*;
 import com.bank.account.exception.ClientNotFoundException;
 import com.bank.account.service.OperationService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 public class OperationController {
@@ -23,5 +24,9 @@ public class OperationController {
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage(), exception);
         }
+    }
+    @PostMapping("/historique")
+    List<HistoriqueOperationDTO> nouveauClient(@RequestBody String mail) {
+        return this.operationService.getHistorique(mail);
     }
 }

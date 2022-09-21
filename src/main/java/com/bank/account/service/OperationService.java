@@ -1,9 +1,6 @@
 package com.bank.account.service;
 
-import com.bank.account.dto.AccountBankDTO;
-import com.bank.account.dto.AccountBankFullDTO;
-import com.bank.account.dto.OperationDTO;
-import com.bank.account.dto.RecuDTO;
+import com.bank.account.dto.*;
 import com.bank.account.entity.AccountBank;
 import com.bank.account.entity.Client;
 import com.bank.account.entity.Operation;
@@ -16,8 +13,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class OperationService {
@@ -39,7 +40,7 @@ public class OperationService {
         TypeOperation typeOperation = operationDTO.getTypeOperation();
         Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationDTO.getIdAccountBank());
         if (!accountBankOptional.isPresent()) {
-            return null;
+            throw new AccountBankNotExistException(operationDTO.getIdAccountBank());
         }
 
         AccountBank accountBank = accountBankOptional.get();
@@ -72,5 +73,23 @@ public class OperationService {
         recu.setIdAccountBank(operationDTO.getIdAccountBank());
         recu.setSomme(operation.getSomme());
         return recu;
+    }
+
+    public List<HistoriqueOperationDTO> getHistorique(String mail) {
+        List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
+        List<HistoriqueOperationDTO>  historiqueOperationDTOS;
+        historiqueOperationDTOS = accountBanks.stream().map(accountBank-> {
+            HistoriqueOperationDTO historiqueOperationDTO = new HistoriqueOperationDTO();
+            historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);
+            historiqueOperationDTO.setAccountBankid(accountBank.getId());
+            List<Operation>  operations = this.operationRepository.findByAccountBankId(accountBank.getId());
+            historiqueOperationDTO.setOperationLightDTO(
+                    operations.stream()
+                    .map(operation -> modelMapper.map(operation, OperationLightDTO.class))
+                    .collect(Collectors.toList())
+            );
+            return historiqueOperationDTO;
+        }).collect(toList());
+        return historiqueOperationDTOS;
     }
 }

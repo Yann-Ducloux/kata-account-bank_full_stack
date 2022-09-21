@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AccountBankRepository extends JpaRepository<AccountBank, Long> {
-    @Query(nativeQuery = true, value = "SELECT a.* FROM Account_Bank a inner join Client c on a.CLIENT_ID=c.ID  WHERE c.mail = :mail")
+    @Query(value = "SELECT a FROM AccountBank a  WHERE a.client.mail = :mail")
     List<AccountBank> findByMail(String mail);
 
 }
