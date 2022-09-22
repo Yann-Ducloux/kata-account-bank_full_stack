@@ -8,10 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.bank.account.dto.AccountBankDTO;
-import com.bank.account.dto.ClientChangePassewordDTO;
-import com.bank.account.dto.ClientDTO;
-import com.bank.account.dto.ClientFullDTO;
+import com.bank.account.dto.*;
 import com.bank.account.exception.ClientNotFoundException;
 import com.bank.account.exception.ClientPasswordFalseException;
 import com.bank.account.service.ClientService;
@@ -53,37 +50,21 @@ public class ClientController {
 
 
     @PostMapping("/connection")
-    String connection(@RequestBody ClientFullDTO clientFullDTO) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        localDateTime= localDateTime.plusDays(1);
-        String jwt = Jwts.builder()
-                .setSubject("ducloux.y@gmail.com")
-                .claim("name", "Micah Silverman")
-                .claim("scope", "admins")
-                // Fri Jun 24 2016 15:33:42 GMT-0400 (EDT)
-                .setIssuedAt(Date.from(Instant.now()))
-                // Sat Jun 24 2116 15:33:42 GMT-0400 (EDT)
-                .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
-                .signWith(
-                        SignatureAlgorithm.HS512,
-                        TextCodec.BASE64.decode("Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="))
-                .compact();
+    String connection(@RequestBody ConnectionDTO connectionDTO) {
+        String jwt = this.clientService.connection(connectionDTO);
         String[] chunks = jwt.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
         final Map<String, String> jsonMap; // = new HashMap<String, Object>();
         String header = new String(decoder.decode(chunks[0]));
         String payload = new String(decoder.decode(chunks[1]));
         ObjectMapper mapper = new ObjectMapper();
-
         try {
-            // convert JSON string to Map
             jsonMap = mapper.readValue(payload,
                     new TypeReference<Map<String, String>>() {
                     });
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-
         return jwt;
     }
 

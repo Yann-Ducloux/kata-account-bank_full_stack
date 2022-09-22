@@ -31,65 +31,80 @@ public class OperationService {
     }
 
     public RecuDTO saveOperation(OperationDTO operationDTO) {
+        controleOperation(operationDTO);
+
+        TypeOperation typeOperation = operationDTO.getTypeOperation();
+        Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationDTO.getIdAccountBank());
+        controleAccountBank(accountBankOptional, operationDTO.getIdAccountBank());
+
+        AccountBank accountBank = accountBankOptional.get();
+        accountBank.setSolde(recupSolde(accountBank, operationDTO));
+        accountBank = accountBankRepository.save(accountBank);
+
+        return recupRecu(this.operationRepository.save(recupOperation(operationDTO, accountBank)));
+    }
+    private void controleOperation(OperationDTO operationDTO) {
         if(operationDTO==null || operationDTO.getTypeOperation() ==null || operationDTO.getIdAccountBank() ==null|| operationDTO.getSomme() ==null ) {
             throw new OperationDonneManquanteExcepion();
         }
         if(operationDTO.getSomme()<=0) {
             throw new OperationSommeNulException(operationDTO.getSomme());
         }
-        TypeOperation typeOperation = operationDTO.getTypeOperation();
-        Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationDTO.getIdAccountBank());
-        if (!accountBankOptional.isPresent()) {
-            throw new AccountBankNotExistException(operationDTO.getIdAccountBank());
-        }
+    }
 
-        AccountBank accountBank = accountBankOptional.get();
-        Operation operation = new Operation();
-
-        if (typeOperation.equals(TypeOperation.DEPOSIT)) {
-            accountBank.setSolde(accountBank.getSolde() + operationDTO.getSomme());
-
-        } else if(typeOperation.equals(TypeOperation.WITHDRAWAL)){
+    private Long recupSolde(AccountBank accountBank, OperationDTO operationDTO){
+        if (operationDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
+            return accountBank.getSolde() + operationDTO.getSomme();
+        } else if(operationDTO.getTypeOperation().equals(TypeOperation.WITHDRAWAL)){
             if(accountBank.getDecouvert()<0) {
                 throw new DecouvertException(accountBank.getDecouvert());
             }
             if(-accountBank.getDecouvert()>accountBank.getSolde() - operationDTO.getSomme()) {
                 throw new DecouvertPlafondException(accountBank.getDecouvert());
             }
-            accountBank.setSolde(accountBank.getSolde() - operationDTO.getSomme());
+            return accountBank.getSolde() - operationDTO.getSomme();
         } else {
             throw new TypeOperationNotExistException();
         }
-
-        accountBank = accountBankRepository.save(accountBank);
-        operation.setAccountBank(accountBank);
-        operation.setTypeOperation(typeOperation);
+    }
+    private void controleAccountBank(Optional<AccountBank> accountBankOptional, Long idAccountBank) {
+        if (!accountBankOptional.isPresent()) {
+            throw new AccountBankNotExistException(idAccountBank);
+        }
+    }
+    private Operation recupOperation(OperationDTO operationDTO, AccountBank accountBank) {
+        Operation operation = modelMapper.map(operationDTO, Operation.class);
         operation.setDateOperation(LocalDateTime.now());
-        operation.setSomme(operationDTO.getSomme());
-        this.operationRepository.save(operation);
-        RecuDTO recu = new RecuDTO();
-        recu.setDateOperation(operation.getDateOperation());
-        recu.setTypeOperation(typeOperation);
-        recu.setIdAccountBank(operationDTO.getIdAccountBank());
-        recu.setSomme(operation.getSomme());
+        operation.setAccountBank(accountBank);
+        return operation;
+    }
+    private RecuDTO recupRecu(Operation operation) {
+        RecuDTO recu = modelMapper.map(operation, RecuDTO.class);
+        recu.setIdAccountBank(operation.getAccountBank().getId());
         return recu;
     }
 
     public List<HistoriqueOperationDTO> getHistorique(String mail) {
+        if(mail ==null || mail.isEmpty()) {
+            throw new MailNotFillException();
+        }
         List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
-        List<HistoriqueOperationDTO>  historiqueOperationDTOS;
-        historiqueOperationDTOS = accountBanks.stream().map(accountBank-> {
-            HistoriqueOperationDTO historiqueOperationDTO = new HistoriqueOperationDTO();
-            historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);
+        if(accountBanks.isEmpty()) {
+            throw new AccountBankHaveNotException();
+        }
+        return recupHistorique(accountBanks);
+    }
+    private List<HistoriqueOperationDTO> recupHistorique(List<AccountBank> accountBanks) {
+       return accountBanks.stream().map(accountBank-> {
+            HistoriqueOperationDTO historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);
             historiqueOperationDTO.setAccountBankid(accountBank.getId());
             List<Operation>  operations = this.operationRepository.findByAccountBankId(accountBank.getId());
             historiqueOperationDTO.setOperationLightDTO(
                     operations.stream()
-                    .map(operation -> modelMapper.map(operation, OperationLightDTO.class))
-                    .collect(Collectors.toList())
+                            .map(operation -> modelMapper.map(operation, OperationLightDTO.class))
+                            .collect(Collectors.toList())
             );
             return historiqueOperationDTO;
         }).collect(toList());
-        return historiqueOperationDTOS;
     }
 }
