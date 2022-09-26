@@ -48,26 +48,6 @@ public class ClientController {
         return this.clientService.saveClient(clientFullDTO);
     }
 
-
-    @PostMapping("/connection")
-    String connection(@RequestBody ConnectionDTO connectionDTO) {
-        String jwt = this.clientService.connection(connectionDTO);
-        String[] chunks = jwt.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        final Map<String, String> jsonMap; // = new HashMap<String, Object>();
-        String header = new String(decoder.decode(chunks[0]));
-        String payload = new String(decoder.decode(chunks[1]));
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            jsonMap = mapper.readValue(payload,
-                    new TypeReference<Map<String, String>>() {
-                    });
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-        return jwt;
-    }
-
     @DeleteMapping("/client/{id}")
     void deleteClient(@PathVariable Long id) {
         try {

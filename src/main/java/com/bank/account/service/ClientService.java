@@ -8,6 +8,7 @@ import com.bank.account.entity.Client;
 import com.bank.account.exception.ClientMailExistException;
 import com.bank.account.exception.ClientNotFoundException;
 import com.bank.account.exception.ClientPasswordFalseException;
+import com.bank.account.exception.MailExistException;
 import com.bank.account.repository.ClientRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,34 +54,13 @@ public class ClientService {
 
     public ClientDTO saveClient(ClientFullDTO clientFullDTO) {
         if (clientRepository.existsByMail(clientFullDTO.getMail())) {
-            throw new ClientMailExistException(clientFullDTO.getMail());
+            throw new MailExistException(clientFullDTO.getMail());
         }
         clientFullDTO.setPassword(hashPassword(clientFullDTO.getPassword()));
         Client client = modelMapper.map(clientFullDTO, Client.class);
         client = clientRepository.save(client);
         return modelMapper.map(clientRepository.save(client), ClientDTO.class);
     }
-    public String connection(ConnectionDTO connectionDTO) {
-        List<Client> clients = this.clientRepository.findByMail(connectionDTO.getMail());
-        if (clients.isEmpty()) {
-            throw new ClientMailExistException(connectionDTO.getMail());
-        } else {
-            Client client = clients.get(0);
-            if(!verifyHash(connectionDTO.getPassword(),client.getPassword())){
-                throw new ClientPasswordFalseException();
-            } else {
-                return Jwts.builder()
-                        .setSubject(connectionDTO.getMail())
-                        .setIssuedAt(Date.from(Instant.now()))
-                        .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
-                        .signWith(
-                                SignatureAlgorithm.HS512,
-                                TextCodec.BASE64.decode("Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="))
-                        .compact();
-            }
-        }
-    }
-
     public ClientDTO miseAjourClient(ClientChangePassewordDTO clientChangePassewordDTO, Long id){
        return this.clientRepository.findById(id)
                 .map(client -> {

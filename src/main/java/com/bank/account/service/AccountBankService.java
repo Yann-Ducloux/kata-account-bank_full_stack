@@ -4,6 +4,8 @@ import com.bank.account.dto.AccountBankDTO;
 import com.bank.account.dto.AccountBankFullDTO;
 import com.bank.account.entity.AccountBank;
 import com.bank.account.entity.Client;
+import com.bank.account.exception.DecouvertException;
+import com.bank.account.exception.SoldeException;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.ClientRepository;
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,12 @@ public class AccountBankService {
     }
 
     public AccountBankFullDTO saveAccountBank(AccountBankDTO accountBankDTO) {
+        if(accountBankDTO.getSolde() != null && accountBankDTO.getSolde()<0) {
+            throw new SoldeException();
+        }
+        if(accountBankDTO.getDecouvert() != null && accountBankDTO.getDecouvert()<0) {
+            throw new DecouvertException(accountBankDTO.getDecouvert());
+        }
         List<Client> clientList = clientRepository.findByMail(accountBankDTO.getMail());
         AccountBank accountBank = new AccountBank();
         accountBank.setClient(clientList.get(0));
