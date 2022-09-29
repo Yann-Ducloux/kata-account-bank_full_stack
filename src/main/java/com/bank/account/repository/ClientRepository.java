@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Boolean existsByMail(String mail);
-    List<Client> findByMail(String mail);
+    Optional<Client> findByMail(String mail);
 
     @Query("select case when count(c)> 0 then true else false end from Client c where c.mail=:mail and c.password=:password")
     Boolean passwordIsValid(String mail, String password);

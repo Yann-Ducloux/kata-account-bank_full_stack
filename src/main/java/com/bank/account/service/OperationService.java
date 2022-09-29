@@ -30,20 +30,24 @@ public class OperationService {
         this.accountBankRepository = accountBankRepository;
     }
 
-    public RecuDTO saveOperation(OperationDTO operationDTO) {
-        controleOperation(operationDTO);
+    public RecuDTO saveOperation(OperationDTO operationDTO, String mail) {
+        controleOperation(operationDTO, mail);
 
         TypeOperation typeOperation = operationDTO.getTypeOperation();
         Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationDTO.getIdAccountBank());
         controleAccountBank(accountBankOptional, operationDTO.getIdAccountBank());
 
         AccountBank accountBank = accountBankOptional.get();
+        controleAccountBankMail(accountBank, mail);
         accountBank.setSolde(recupSolde(accountBank, operationDTO));
         accountBank = accountBankRepository.save(accountBank);
 
         return recupRecu(this.operationRepository.save(recupOperation(operationDTO, accountBank)));
     }
-    private void controleOperation(OperationDTO operationDTO) {
+    private void controleOperation(OperationDTO operationDTO, String mail) {
+        if(mail ==null ||mail.isEmpty()) {
+            throw new MailNotFillException();
+        }
         if(operationDTO==null || operationDTO.getTypeOperation() ==null || operationDTO.getIdAccountBank() ==null|| operationDTO.getSomme() ==null ) {
             throw new OperationDonneManquanteExcepion();
         }
@@ -56,15 +60,30 @@ public class OperationService {
         if (operationDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
             return accountBank.getSolde() + operationDTO.getSomme();
         } else if(operationDTO.getTypeOperation().equals(TypeOperation.WITHDRAWAL)){
-            if(accountBank.getDecouvert()<0) {
-                throw new DecouvertException(accountBank.getDecouvert());
-            }
-            if(-accountBank.getDecouvert()>accountBank.getSolde() - operationDTO.getSomme()) {
-                throw new DecouvertPlafondException(accountBank.getDecouvert());
-            }
+            controleSolde(accountBank, operationDTO);
             return accountBank.getSolde() - operationDTO.getSomme();
         } else {
             throw new TypeOperationNotExistException();
+        }
+    }
+
+    private void controleSolde(AccountBank accountBank, OperationDTO operationDTO) {
+        if(accountBank.getDecouvert() ==null || accountBank.getDecouvert()<0) {
+            throw new DecouvertException(accountBank.getDecouvert());
+        }
+        if(accountBank.getSolde() ==null) {
+            throw new SoldeException();
+        }
+        if(operationDTO.getSomme() ==null || operationDTO.getSomme()<0) {
+            throw new DecouvertException(accountBank.getDecouvert());
+        }
+        if(-accountBank.getDecouvert()>accountBank.getSolde() - operationDTO.getSomme()) {
+            throw new DecouvertPlafondException(accountBank.getDecouvert());
+        }
+    }
+    private void controleAccountBankMail(AccountBank accountBank, String mail) {
+        if (!accountBank.getClient().getMail().equals(mail) ) {
+            throw new ClientMailNotEqualsException(mail);
         }
     }
     private void controleAccountBank(Optional<AccountBank> accountBankOptional, Long idAccountBank) {

@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class AccountBankDTO {
-    private String mail;
     private Long solde;
     private Long decouvert;
 }

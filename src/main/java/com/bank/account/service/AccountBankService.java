@@ -4,8 +4,7 @@ import com.bank.account.dto.AccountBankDTO;
 import com.bank.account.dto.AccountBankFullDTO;
 import com.bank.account.entity.AccountBank;
 import com.bank.account.entity.Client;
-import com.bank.account.exception.DecouvertException;
-import com.bank.account.exception.SoldeException;
+import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.ClientRepository;
 import org.modelmapper.ModelMapper;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,16 +25,22 @@ public class AccountBankService {
         this.clientRepository = clientRepository;
     }
 
-    public AccountBankFullDTO saveAccountBank(AccountBankDTO accountBankDTO) {
-        if(accountBankDTO.getSolde() != null && accountBankDTO.getSolde()<0) {
+    public AccountBankFullDTO saveAccountBank(AccountBankDTO accountBankDTO, String mail) {
+        if(mail ==null || mail.isEmpty()) {
+            throw new MailNotFillException();
+        }
+        if(accountBankDTO.getSolde() == null || accountBankDTO.getSolde()<0) {
             throw new SoldeException();
         }
-        if(accountBankDTO.getDecouvert() != null && accountBankDTO.getDecouvert()<0) {
+        if(accountBankDTO.getDecouvert() == null || accountBankDTO.getDecouvert()<0) {
             throw new DecouvertException(accountBankDTO.getDecouvert());
         }
-        List<Client> clientList = clientRepository.findByMail(accountBankDTO.getMail());
+        Optional<Client> clientOptional = clientRepository.findByMail(mail);
+        if(!clientOptional.isPresent()) {
+            throw new ClientMailExistException(mail);
+        }
         AccountBank accountBank = new AccountBank();
-        accountBank.setClient(clientList.get(0));
+        accountBank.setClient(clientOptional.get());
         accountBank.setDecouvert(accountBankDTO.getDecouvert());
         accountBank.setDateCreation(LocalDateTime.now());
         accountBank.setSolde(accountBankDTO.getSolde());
@@ -43,6 +49,9 @@ public class AccountBankService {
 
 
     public List<AccountBankFullDTO> getAllAccountBank(String mail) {
+        if(mail ==null ||mail.isEmpty()) {
+            throw new MailNotFillException();
+        }
         List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
         return accountBanks.stream()
                 .map(accountBank -> modelMapper.map(accountBank, AccountBankFullDTO.class))
