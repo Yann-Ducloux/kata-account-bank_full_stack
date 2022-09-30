@@ -39,7 +39,6 @@ public class ClientService {
         }
         clientFullDTO.setPassword(hashPassword(clientFullDTO.getPassword()));
         Client client = modelMapper.map(clientFullDTO, Client.class);
-        client = clientRepository.save(client);
         return modelMapper.map(clientRepository.save(client), ClientDTO.class);
     }
 
