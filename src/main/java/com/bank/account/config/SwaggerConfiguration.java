@@ -41,13 +41,6 @@ public class SwaggerConfiguration {
                 .build();
     }
     @Bean
-    public GroupedOpenApi adminApi() {
-        return GroupedOpenApi.builder()
-                .group("springshop-admin")
-                .pathsToMatch("/admin/**")
-                .build();
-    }
-    @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("SpringShop API")

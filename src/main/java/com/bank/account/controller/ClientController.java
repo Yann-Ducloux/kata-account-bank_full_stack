@@ -9,17 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.bank.account.dto.*;
-import com.bank.account.exception.ClientNotFoundException;
-import com.bank.account.exception.ClientPasswordFalseException;
 import com.bank.account.service.ClientService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
@@ -36,11 +34,12 @@ public class ClientController {
      * @throws Exception
      */
     @PostMapping("/client")
-    ClientDTO nouveauClient(@RequestBody ClientFullDTO clientFullDTO) throws Exception {
-        try {
-            return this.clientService.saveClient(clientFullDTO);
-        }  catch (Exception exception) {
-            throw new Exception(exception.getMessage(), exception);
-        }
+    @ApiOperation(value = "Get a product by id", notes = "Returns a product as per the id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved"),
+            @ApiResponse(code = 404, message = "Not found - The product was not found")
+    })
+    ResponseEntity<ClientDTO> nouveauClient(@ParameterObject ClientFullDTO clientFullDTO) throws Exception {
+            return ResponseEntity.ok().body(this.clientService.saveClient(clientFullDTO));
     }
 }
