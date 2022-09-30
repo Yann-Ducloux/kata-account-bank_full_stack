@@ -18,6 +18,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public JwtUserDetailsService(ClientRepository clientRepository) {
 		this.clientRepository = clientRepository;
 	}
+
+	/**
+	 * Cette fonction permet de charger l'utilisateur
+	 * @param mail
+	 * @return l'utilisateur
+	 * @throws UsernameNotFoundException
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
 		if (clientRepository.existsByMail(mail)) {

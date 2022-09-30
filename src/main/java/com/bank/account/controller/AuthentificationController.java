@@ -2,8 +2,8 @@ package com.bank.account.controller;
 
 import com.bank.account.config.JwtTokenUtil;
 import com.bank.account.dto.ConnectionDTO;
-import com.bank.account.entity.JwtRequest;
-import com.bank.account.entity.JwtResponse;
+import com.bank.account.entity.InfoUtilisateur;
+import com.bank.account.entity.jwtUtilisateur;
 import com.bank.account.exception.ClientPasswordFalseException;
 import com.bank.account.exception.MailIsInvalidEception;
 import com.bank.account.service.AuthentificationService;
@@ -38,19 +38,32 @@ public class AuthentificationController {
 		this.authentificationService = authentificationService;
 	}
 
+	/**
+	 * fonction qui récupére le jwt de l'utlisateur qui posséde un compte
+	 * @param infoUtilisateur les info de l'utilisateur
+	 * @return JWT le jwt de l'utilisateur
+	 * @throws Exception
+	 */
 	@PostMapping("/authentification")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody InfoUtilisateur infoUtilisateur)
 			throws Exception {
 
-		authenticate(authenticationRequest.getMail(), authenticationRequest.getPassword());
+		authenticate(infoUtilisateur.getMail(), infoUtilisateur.getPassword());
 
 		final UserDetails userDetails = jwtInMemoryUserDetailsService
-				.loadUserByUsername(authenticationRequest.getMail());
+				.loadUserByUsername(infoUtilisateur.getMail());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new jwtUtilisateur(token));
 	}
+
+	/**
+	 * fonction qui vérifie si l'utilisateur peut se connecter
+	 * @param mail le mail
+	 * @param password mot de passe
+	 * @throws Exception
+	 */
 
 	private void authenticate(String mail, String password) throws Exception {
 		Objects.requireNonNull(mail);

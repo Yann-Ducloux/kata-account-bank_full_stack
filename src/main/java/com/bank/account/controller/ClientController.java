@@ -29,9 +29,18 @@ public class ClientController {
         this.clientService=clientService;
     }
 
-
+    /**
+     * fonction qui crée un nouveau client
+     * @param clientFullDTO le info du client a créer
+     * @return ClientDTO le info du client créer
+     * @throws Exception
+     */
     @PostMapping("/client")
-    ClientDTO nouveauClient(@RequestBody ClientFullDTO clientFullDTO) {
-        return this.clientService.saveClient(clientFullDTO);
+    ClientDTO nouveauClient(@RequestBody ClientFullDTO clientFullDTO) throws Exception {
+        try {
+            return this.clientService.saveClient(clientFullDTO);
+        }  catch (Exception exception) {
+            throw new Exception(exception.getMessage(), exception);
+        }
     }
 }

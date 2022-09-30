@@ -1,6 +1,10 @@
 package com.bank.account.controller;
 
 import com.bank.account.dto.*;
+import com.bank.account.exception.MailNotFillException;
+import com.bank.account.exception.OperationDonneManquanteExcepion;
+import com.bank.account.exception.OperationSommeNulException;
+import com.bank.account.exception.TypeOperationNotExistException;
 import com.bank.account.service.DecodeJwtService;
 import com.bank.account.service.OperationService;
 import org.springframework.http.HttpStatus;
@@ -21,18 +25,37 @@ public class OperationController {
         this.operationService=operationService;
         this.decodeJwtService=decodeJwtService;
     }
+
+    /**
+     * fonction qui effectue un opération
+     * @param operationDTO info de l'opération a créer
+     * @param request
+     * @return RecuDTO reçu de l'opération
+     * @throws Exception
+     */
     @PostMapping("/operation")
-    RecuDTO nouvelleOperation(@RequestBody OperationDTO operationDTO, HttpServletRequest request) {
+    RecuDTO nouvelleOperation(@RequestBody OperationDTO operationDTO, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
             return this.operationService.saveOperation(operationDTO, mail);
         } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage(), exception);
+            throw new Exception("USER_DISABLED", exception);
         }
     }
+
+    /**
+     *  fonction qui récupére la l'historique de toutes les opération
+     * @param request
+     * @return  List<HistoriqueOperationDTO> la liste des infos des opération
+     * @throws Exception
+     */
     @GetMapping("/historique")
-    List<HistoriqueOperationDTO> nouveauClient(HttpServletRequest request) {
-        String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-        return this.operationService.getHistorique(mail);
+    List<HistoriqueOperationDTO> nouveauClient(HttpServletRequest request) throws Exception {
+        try {
+            String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
+            return this.operationService.getHistorique(mail);
+        }  catch (Exception exception) {
+            throw new Exception(exception.getMessage(), exception);
+        }
     }
 }

@@ -26,16 +26,36 @@ public class AccountBankController extends HandlerInterceptorAdapter {
 
     }
 
+    /**
+     * fonction qu crée un compte en bank
+     * @param accountBankDTO info du compte en bank a créer
+     * @param request
+     * @return accountBank info du compte en bank créer
+     * @throws Exception
+     */
     @PostMapping("/account_bank/create")
-    AccountBankFullDTO nouveaucompte(@RequestBody AccountBankDTO accountBankDTO,  HttpServletRequest request) {
-        String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-        return this.accountBankService.saveAccountBank(accountBankDTO, mail);
+    AccountBankFullDTO nouveaucompte(@RequestBody AccountBankDTO accountBankDTO,  HttpServletRequest request) throws Exception {
+        try {
+            String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
+            return this.accountBankService.saveAccountBank(accountBankDTO, mail);
+        }  catch (Exception exception) {
+            throw new Exception(exception.getMessage(), exception);
+        }
     }
 
+    /**
+     * fonction qui renvoie la liste du compte en bank de la personne
+     * @param request
+     * @return List<AccountBankFullDTO> la liste des infos du compte en bank créer
+     * @throws Exception
+     */
     @GetMapping({ "/account_bank/find" })
-    List<AccountBankFullDTO> nouveauClient( HttpServletRequest request,
-                                           HttpServletResponse response) {
-        String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-        return this.accountBankService.getAllAccountBank(mail);
+    List<AccountBankFullDTO> nouveauClient( HttpServletRequest request) throws Exception {
+        try {
+            String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
+            return this.accountBankService.getAllAccountBank(mail);
+        }  catch (Exception exception) {
+            throw new Exception(exception.getMessage(), exception);
+        }
     }
 }

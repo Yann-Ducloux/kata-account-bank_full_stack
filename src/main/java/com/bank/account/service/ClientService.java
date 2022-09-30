@@ -11,12 +11,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ClientService {
+
     private ClientRepository clientRepository;
     ModelMapper modelMapper = new ModelMapper();
+    static final String PREFIXE_PASSWORD = "jklhdfgjkDFGKSL5654lmsdfgjklm";
+    static final String SUFFIXE_PASSWORD = "kjlfghn425425fth564FGDFG";
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
+    /**
+     * Cette fonction enregistre un nouveau client.
+     * @param clientFullDTO données lié du client
+     * @return ClientDTO le client enregistré.
+     * @throws DonneeNotFillException
+     * @throws MailExistException
+     */
     public ClientDTO saveClient(ClientFullDTO clientFullDTO) {
         if(clientFullDTO.getMail() ==null || clientFullDTO.getMail().isEmpty() ||
                 clientFullDTO.getNom() ==null || clientFullDTO.getNom().isEmpty() ||
@@ -33,7 +43,13 @@ public class ClientService {
         return modelMapper.map(clientRepository.save(client), ClientDTO.class);
     }
 
-    private String hashPassword(String plainTextPassword){
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+    /**
+     * Cette fonction crypte le mot de passe.
+     * @param password mot de passe
+     * @return mot de passe crypté.
+     */
+    private String hashPassword(String password){
+        password = PREFIXE_PASSWORD + password  + SUFFIXE_PASSWORD;
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

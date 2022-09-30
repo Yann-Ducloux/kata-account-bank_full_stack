@@ -30,7 +30,18 @@ public class OperationService {
         this.accountBankRepository = accountBankRepository;
     }
 
-    public RecuDTO saveOperation(OperationDTO operationDTO, String mail) {
+    /**
+     * fonction qui savegarde l'opération
+     * @param operationDTO les infos de l'opération
+     * @param mail le mail de l'utilisateur
+     * @return RecuDTO reçu de l'opération
+     * @throws MailNotFillException
+     * @throws OperationDonneManquanteExcepion
+     * @throws OperationSommeNulException
+     * @throws TypeOperationNotExistException
+     */
+    public RecuDTO saveOperation(OperationDTO operationDTO, String mail) throws MailNotFillException, OperationDonneManquanteExcepion, OperationSommeNulException, TypeOperationNotExistException {
+
         controleOperation(operationDTO, mail);
 
         TypeOperation typeOperation = operationDTO.getTypeOperation();
@@ -44,6 +55,15 @@ public class OperationService {
 
         return recupRecu(this.operationRepository.save(recupOperation(operationDTO, accountBank)));
     }
+
+    /**
+     * fonction qui controle les info avaant de caaluler l'opération
+     * @param operationDTO les infos de l'opération
+     * @param mail le mail de l'utilisateur
+     * @throws MailNotFillException
+     * @throws OperationDonneManquanteExcepion
+     * @throws OperationSommeNulException
+     */
     private void controleOperation(OperationDTO operationDTO, String mail) {
         if(mail ==null ||mail.isEmpty()) {
             throw new MailNotFillException();
@@ -56,6 +76,12 @@ public class OperationService {
         }
     }
 
+    /**
+     * fonction qui calcul le solde
+     * @param accountBank les info du compte en bank
+     * @param operationDTO les infos de l'opération
+     * @return solde la valeur du solde
+     */
     private Long recupSolde(AccountBank accountBank, OperationDTO operationDTO){
         if (operationDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
             return accountBank.getSolde() + operationDTO.getSomme();
@@ -67,6 +93,15 @@ public class OperationService {
         }
     }
 
+    /**
+     * fonction qui contrôle le solde
+     * @param accountBank les info du compte en bank
+     * @param operationDTO les infos de l'opération
+     * @throws DecouvertException
+     * @throws SoldeException
+     * @throws DecouvertException
+     * @throws DecouvertPlafondException
+     */
     private void controleSolde(AccountBank accountBank, OperationDTO operationDTO) {
         if(accountBank.getDecouvert() ==null || accountBank.getDecouvert()<0) {
             throw new DecouvertException(accountBank.getDecouvert());
@@ -81,28 +116,62 @@ public class OperationService {
             throw new DecouvertPlafondException(accountBank.getDecouvert());
         }
     }
+
+    /**
+     * fonction qui vérifie que le mail du compte correspond a celui qui est identifié
+     * @param accountBank les info du compte en bank
+     * @param mail le mail de l'utilisateur
+     * @throws ClientMailNotEqualsException
+     */
     private void controleAccountBankMail(AccountBank accountBank, String mail) {
         if (!accountBank.getClient().getMail().equals(mail) ) {
             throw new ClientMailNotEqualsException(mail);
         }
     }
+
+    /**
+     * fonction qui transforme le reçu
+     * @param accountBankOptional les info du compte en bank
+     * @param idAccountBank  identifiant du compte en bank
+     * @throws AccountBankNotExistException
+     */
     private void controleAccountBank(Optional<AccountBank> accountBankOptional, Long idAccountBank) {
         if (!accountBankOptional.isPresent()) {
             throw new AccountBankNotExistException(idAccountBank);
         }
     }
+
+    /**
+     * fonction qui transforme le l'opération
+     * @param operationDTO les infos de l'opération
+     * @param accountBank les info du compte en bank
+     * @return operation
+     */
     private Operation recupOperation(OperationDTO operationDTO, AccountBank accountBank) {
         Operation operation = modelMapper.map(operationDTO, Operation.class);
         operation.setDateOperation(LocalDateTime.now());
         operation.setAccountBank(accountBank);
         return operation;
     }
+
+    /**
+     * fonction qui transforme le reçu
+     * @param operation les infos de l'opération
+     * @return Recu
+     */
     private RecuDTO recupRecu(Operation operation) {
         RecuDTO recu = modelMapper.map(operation, RecuDTO.class);
         recu.setIdAccountBank(operation.getAccountBank().getId());
         return recu;
     }
 
+    /**
+     * fonction qui récupére l'historique d'une personne
+     * @param mail le mail de l'utilisateur
+     * @return List<HistoriqueOperationDTO> l'historiaqqque de toute les opérations
+     * @throws MailNotFillException
+     * @throws AccountBankHaveNotException
+     */
     public List<HistoriqueOperationDTO> getHistorique(String mail) {
         if(mail ==null || mail.isEmpty()) {
             throw new MailNotFillException();
@@ -113,6 +182,12 @@ public class OperationService {
         }
         return recupHistorique(accountBanks);
     }
+
+    /**
+     * fonction qui récupére l'historique d'une personne
+     * @param accountBanks les info du compte en bank
+     * @return List<HistoriqueOperationDTO> l'historiaqqque de toute les opérations
+     */
     private List<HistoriqueOperationDTO> recupHistorique(List<AccountBank> accountBanks) {
        return accountBanks.stream().map(accountBank-> {
             HistoriqueOperationDTO historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);

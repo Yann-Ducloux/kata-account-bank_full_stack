@@ -25,6 +25,16 @@ public class AccountBankService {
         this.clientRepository = clientRepository;
     }
 
+    /**
+     * Cette fonction créer un compte banquaire
+     * @param accountBankDTO les info du compte en bank que l'on va créer
+     * @param mail le mail
+     * @return AccountBankFullDTO les infos du compte créer
+     * @throws MailNotFillException
+     * @throws SoldeException
+     * @throws DecouvertException
+     * @throws ClientMailExistException
+     */
     public AccountBankFullDTO saveAccountBank(AccountBankDTO accountBankDTO, String mail) {
         if(mail ==null || mail.isEmpty()) {
             throw new MailNotFillException();
@@ -47,7 +57,12 @@ public class AccountBankService {
         return modelMapper.map(accountBankRepository.save(accountBank), AccountBankFullDTO.class);
     }
 
-
+    /**
+     * Cette fonction récupérer la liste des compte
+     * @param mail le mail
+     * @return  List<AccountBankFullDTO> la liste de comptes rattachez au mail
+     * @throws MailNotFillException
+     */
     public List<AccountBankFullDTO> getAllAccountBank(String mail) {
         if(mail ==null ||mail.isEmpty()) {
             throw new MailNotFillException();
