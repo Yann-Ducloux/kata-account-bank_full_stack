@@ -7,6 +7,9 @@ import com.bank.account.entity.jwtUtilisateur;
 import com.bank.account.exception.ClientPasswordFalseException;
 import com.bank.account.exception.MailIsInvalidEception;
 import com.bank.account.service.AuthentificationService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +48,11 @@ public class AuthentificationController {
 	 * @throws Exception
 	 */
 	@PostMapping("/authentification")
+	@ApiOperation(value = "post a user", notes = "authentification a user")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Successfully retrieved"),
+			@ApiResponse(code = 404, message = "Not found - The user was not found")
+	})
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody InfoUtilisateur infoUtilisateur)
 			throws Exception {
 
@@ -80,10 +88,6 @@ public class AuthentificationController {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
-		} catch (MailIsInvalidEception e) {
-			throw new Exception("INVALID_Mail", e);
-		} catch (ClientPasswordFalseException e) {
-			throw new Exception("INVALID_Password", e);
 		}
 	}
 }

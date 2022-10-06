@@ -35,12 +35,11 @@ public class ClientController {
      * @throws Exception
      */
     @PostMapping("/client")
-    @ApiOperation(value = "Get a product by id", notes = "Returns a product as per the id")
+    @ApiOperation(value = "post a client", notes = "create a client")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
-            @ApiResponse(code = 404, message = "Not found - The product was not found")
     })
-    ResponseEntity<ClientDTO> nouveauClient(@RequestBody ClientFullDTO clientFullDTO) throws Exception {
+    ResponseEntity<ClientDTO> nouveauClient(/*@ParameterObject*/ @RequestBody ClientFullDTO clientFullDTO) throws Exception {
             return ResponseEntity.ok().body(this.clientService.saveClient(clientFullDTO));
     }
 }

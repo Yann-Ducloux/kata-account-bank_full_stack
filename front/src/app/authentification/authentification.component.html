@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <form [formGroup]="authentificationForm" (ngSubmit)="onFormSubmitAuthentification()">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input  formControlName="email"  type="text" name="email" id="email" class="form-control" [ngClass]="listErrorMail.length > 0 ? 'champ_invalide' :''">
+                    <ul>
+                        <li class="text_error" *ngFor="let errorMail of listErrorMail">{{errorMail}}</li>
+                    </ul>             
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input formControlName="password"  type="password" name="password" id="password" class="form-control"  [ngClass]="listErrorPassword.length > 0 ? 'champ_invalide' :''">
+                    <ul>
+                        <li class="text_error" *ngFor="let errorPassword of listErrorPassword">{{errorPassword}}</li>
+                    </ul>
+                </div>
+                <br>
+                <button class="btn btn-primary">envoie</button>
+            </form>
+        </div>
+    </div>
+</div>

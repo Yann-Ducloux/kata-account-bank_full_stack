@@ -7,6 +7,9 @@ import com.bank.account.dto.ClientFullDTO;
 import com.bank.account.service.AccountBankService;
 import com.bank.account.service.DecodeJwtService;
 import com.bank.account.service.OperationService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -33,7 +36,11 @@ public class AccountBankController extends HandlerInterceptorAdapter {
      * @return accountBank info du compte en bank créer
      * @throws Exception
      */
-    @PostMapping("/account_bank/create")
+    @PostMapping("/account_bank")
+    @ApiOperation(value = "post a account bank for create by client conecte", notes = "create a account bank by client conecter")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved"),
+    })
     AccountBankFullDTO nouveaucompte(@RequestBody AccountBankDTO accountBankDTO,  HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
@@ -50,6 +57,11 @@ public class AccountBankController extends HandlerInterceptorAdapter {
      * @throws Exception
      */
     @GetMapping({ "/account_bank/find" })
+    @ApiOperation(value = "get a account by user connected", notes = "create a account bank")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved"),
+            @ApiResponse(code = 404, message = "Not found - The account bank was not found")
+    })
     List<AccountBankFullDTO> nouveauClient( HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
