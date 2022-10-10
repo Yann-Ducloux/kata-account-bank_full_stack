@@ -1,4 +1,4 @@
-<div class="container">
+<mat-card><div class="container">
     <div class="row">
         <div class="col-md-8">
             <form [formGroup]="userForm" (ngSubmit)="onFormSubmitUser()">
@@ -31,8 +31,8 @@
                     </ul>
                 </div>
                 <br>
-                <button class="btn btn-primary">envoie</button>
+                <button mat-raised-button color="primary">envoie</button>
             </form>
         </div>
     </div>
-</div>
+</div></mat-card>
