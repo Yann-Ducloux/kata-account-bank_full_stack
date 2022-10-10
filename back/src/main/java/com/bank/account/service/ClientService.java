@@ -45,10 +45,10 @@ public class ClientService {
             throw new DonneeNotFillException();
         }
         if(!pattern.matcher(clientFullDTO.getMail()).matches() ||
-            clientFullDTO.getMail().length() <2 || clientFullDTO.getMail().length() >30 ||
+            clientFullDTO.getMail().length() <6 || clientFullDTO.getMail().length() >30 ||
             clientFullDTO.getNom().length() <2 || clientFullDTO.getNom().length() >30 ||
             clientFullDTO.getPrenom().length() <2 || clientFullDTO.getPrenom().length() >30 ||
-            clientFullDTO.getPassword().length() <2 || clientFullDTO.getPassword().length() >30) {
+            clientFullDTO.getPassword().length() <6 || clientFullDTO.getPassword().length() >30) {
             throw new DataIncorrectException();
         }
         if(clientRepository.existsByMail(clientFullDTO.getMail())) {

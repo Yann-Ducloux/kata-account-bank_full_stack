@@ -42,8 +42,8 @@ export class AuthentificationComponent implements OnInit {
         listError.push("Erreur pattern mail");
       }
       var mail:String = this.authentificationForm.get('email')?.value;
-      if(mail.length<2 || mail.length>30) {
-        listError.push("la taille du champs doit être compris entre 2 et 30");
+      if(mail.length<6 || mail.length>30) {
+        listError.push("la taille du champs doit être compris entre 6 et 30");
       }
     }
     return listError;
@@ -52,8 +52,8 @@ export class AuthentificationComponent implements OnInit {
     var listError:String[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");
-    } else if(champ.length<2 || champ.length>30) {
-      listError.push("la taille du champs doit être compris entre 2 et 30");
+    } else if(champ.length<6 || champ.length>30) {
+      listError.push("la taille du champs doit être compris entre 6 et 30");
     }
     return listError;
   }

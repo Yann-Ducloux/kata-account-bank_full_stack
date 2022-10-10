@@ -14,7 +14,7 @@ public class AuthentificationExceptionHandler {
 
     @ExceptionHandler(value = {MailIsInvalidEception.class})
     public ResponseEntity<Object> mailInvalidHandleError(MailIsInvalidEception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le mot de passe est faux");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("le mail n'existe pas");
     }
 
     @ExceptionHandler(value = {ClientPasswordFalseException.class})

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ClientFullDTO } from 'src/interface/clientFullDTO';
 import { ApiService } from '../services/api.service';
 
@@ -11,7 +12,7 @@ import { ApiService } from '../services/api.service';
 })
 export class CreateClientComponent implements OnInit {
   public userForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { 
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService, private router: Router) { 
     this.userForm = formBuilder.group({
       email: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(this.emailRegex)]],
       nom: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
@@ -38,9 +39,9 @@ export class CreateClientComponent implements OnInit {
       this.envoieDonnee();
     } else {
       this.listErrorMail = this.controleChampMail(); 
-      this.listErrorNom = this.controleChamp(this.userForm.get('nom')?.value);
-      this.listErrorPrenom = this.controleChamp(this.userForm.get('prenom')?.value);
-      this.listErrorPassword = this.controleChamp(this.userForm.get('password')?.value);
+      this.listErrorNom = this.controleChamp(this.userForm.get('nom')?.value, 2);
+      this.listErrorPrenom = this.controleChamp(this.userForm.get('prenom')?.value, 2);
+      this.listErrorPassword = this.controleChamp(this.userForm.get('password')?.value, 6);
     }
   }
   controleChampMail() : String[]{
@@ -52,18 +53,18 @@ export class CreateClientComponent implements OnInit {
         listError.push("Erreur pattern mail");
       }
       var mail:String = this.userForm.get('email')?.value;
-      if(mail.length<2 || mail.length>30) {
-        listError.push("la taille du champs doit être compris entre 2 et 30");
+      if(mail.length<6 || mail.length>30) {
+        listError.push("la taille du champs doit être compris entre 6 et 30");
       }
     }
     return listError;
   }
-  controleChamp(champ: string) :  String[]{
+  controleChamp(champ: string, minLength:number) :  String[]{
     var listError:String[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");
-    } else if(champ.length<2 || champ.length>30) {
-      listError.push("la taille du champs doit être compris entre 2 et 30");
+    } else if(champ.length<minLength || champ.length>30) {
+      listError.push("la taille du champs doit être compris entre "+minLength+" et 30");
     }
     return listError;
   }
@@ -76,8 +77,8 @@ export class CreateClientComponent implements OnInit {
   console.log(client);
   this.apiService.createClient(client).subscribe({
       next: (response) => {
-        console.log(response);
       alert("compte créer");
+      this.router.navigate(['/authentification']);
     },
     error: (error) => {
       alert(error.error);
