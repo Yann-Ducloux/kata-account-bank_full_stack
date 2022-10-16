@@ -1,6 +1,5 @@
 package com.bank.account.dto;
 
-import com.bank.account.entity.Client;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class AccountBankFullDTO {
     Long id;
-    ClientDTO client;
+    ClientResponseDTO client;
     private Long solde;
     private Long decouvert;
     LocalDateTime dateCreation;

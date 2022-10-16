@@ -1,11 +1,9 @@
 package com.bank.account.controller;
 
 import com.bank.account.config.JwtTokenUtil;
-import com.bank.account.dto.ConnectionDTO;
-import com.bank.account.entity.InfoUtilisateur;
+import com.bank.account.dto.ConnectionRequestDTO;
+import com.bank.account.entity.InfoUtilisateurRequest;
 import com.bank.account.entity.jwtUtilisateur;
-import com.bank.account.exception.ClientPasswordFalseException;
-import com.bank.account.exception.MailIsInvalidEception;
 import com.bank.account.service.AuthentificationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -53,7 +51,7 @@ public class AuthentificationController {
 			@ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 404, message = "Not found - The user was not found")
 	})
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody InfoUtilisateur infoUtilisateur)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody InfoUtilisateurRequest infoUtilisateur)
 			throws Exception {
 
 		authenticate(infoUtilisateur.getMail(), infoUtilisateur.getPassword());
@@ -78,10 +76,10 @@ public class AuthentificationController {
 		Objects.requireNonNull(password);
 
 		try {
-			ConnectionDTO connectionDTO = new ConnectionDTO();
-			connectionDTO.setMail(mail);
-			connectionDTO.setPassword(password);
-			if(this.authentificationService.connection(connectionDTO)){
+			ConnectionRequestDTO connectionRequestDTO = new ConnectionRequestDTO();
+			connectionRequestDTO.setMail(mail);
+			connectionRequestDTO.setPassword(password);
+			if(this.authentificationService.connection(connectionRequestDTO)){
 				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(mail, password));
 			}
 		} catch (DisabledException e) {

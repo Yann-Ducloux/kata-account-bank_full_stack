@@ -1,20 +1,13 @@
 package com.bank.account.service;
 
-import com.bank.account.dto.ConnectionDTO;
+import com.bank.account.dto.ConnectionRequestDTO;
 import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
 import com.bank.account.repository.ClientRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,23 +22,23 @@ public class AuthentificationService {
     static final String SUFFIXE_PASSWORD = "kjlfghn425425fth564FGDFG";
     /**
      * fonction qui retourne le bearer pour se connecté
-     * @param connectionDTO mail et le mot de passe
+     * @param connectionRequestDTO mail et le mot de passe
      * @return le jwt qui permet de ce connecté
      * @throws DonneeNotFillException
      * @throws MailIsInvalidEception
      * @throws ClientPasswordFalseException
      */
-    public Boolean connection(ConnectionDTO connectionDTO) {
-        if(connectionDTO.getMail() ==null || connectionDTO.getMail().isEmpty() ||
-                connectionDTO.getPassword() ==null || connectionDTO.getPassword().isEmpty()) {
+    public Boolean connection(ConnectionRequestDTO connectionRequestDTO) {
+        if(connectionRequestDTO.getMail() ==null || connectionRequestDTO.getMail().isEmpty() ||
+                connectionRequestDTO.getPassword() ==null || connectionRequestDTO.getPassword().isEmpty()) {
             throw new DonneeNotFillException();
         }
-        Optional<Client> clients = this.clientRepository.findByMail(connectionDTO.getMail());
+        Optional<Client> clients = this.clientRepository.findByMail(connectionRequestDTO.getMail());
         if (!clients.isPresent()) {
-            throw new MailIsInvalidEception(connectionDTO.getMail());
+            throw new MailIsInvalidEception(connectionRequestDTO.getMail());
         }
         Client client = clients.get();
-        if(!verifyHash(connectionDTO.getPassword(),client.getPassword())){
+        if(!verifyHash(connectionRequestDTO.getPassword(),client.getPassword())){
             throw new ClientPasswordFalseException();
         }
         return true;

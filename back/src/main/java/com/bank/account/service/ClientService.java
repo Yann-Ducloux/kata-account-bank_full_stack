@@ -1,7 +1,7 @@
 package com.bank.account.service;
 
-import com.bank.account.dto.ClientDTO;
-import com.bank.account.dto.ClientFullDTO;
+import com.bank.account.dto.ClientResponseDTO;
+import com.bank.account.dto.ClientResquestDTO;
 import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
 import com.bank.account.repository.ClientRepository;
@@ -25,34 +25,35 @@ public class ClientService {
 
     /**
      * Cette fonction enregistre un nouveau client.
-     * @param clientFullDTO données lié du client
+     * @param clientResquestDTO données lié du client
      * @return ClientDTO le client enregistré.
      * @throws DonneeNotFillException
      * @throws MailExistException
      */
-    public ClientDTO saveClient(ClientFullDTO clientFullDTO) {
-        controleChamps(clientFullDTO);
-        clientFullDTO.setPassword(hashPassword(clientFullDTO.getPassword()));
-        Client client = modelMapper.map(clientFullDTO, Client.class);
-        return modelMapper.map(clientRepository.save(client), ClientDTO.class);
+    public ClientResponseDTO saveClient(ClientResquestDTO clientResquestDTO) {
+        controleChamps(clientResquestDTO);
+        clientResquestDTO.setPassword(hashPassword(clientResquestDTO.getPassword()));
+        Client client = modelMapper.map(clientResquestDTO, Client.class);
+        Client clientSaved = clientRepository.save(client);
+        return modelMapper.map(clientSaved, ClientResponseDTO.class);
     }
-    private void controleChamps(ClientFullDTO clientFullDTO) {
+    private void controleChamps(ClientResquestDTO clientResquestDTO) {
         Pattern pattern = Pattern.compile(REGEX_MAIL);
-        if(clientFullDTO.getMail() ==null || clientFullDTO.getMail().isEmpty() ||
-                clientFullDTO.getNom() ==null || clientFullDTO.getNom().isEmpty() ||
-                clientFullDTO.getPrenom() ==null || clientFullDTO.getPrenom().isEmpty() ||
-                clientFullDTO.getPassword() ==null || clientFullDTO.getPassword().isEmpty()) {
+        if(clientResquestDTO.getMail() ==null || clientResquestDTO.getMail().isEmpty() ||
+                clientResquestDTO.getNom() ==null || clientResquestDTO.getNom().isEmpty() ||
+                clientResquestDTO.getPrenom() ==null || clientResquestDTO.getPrenom().isEmpty() ||
+                clientResquestDTO.getPassword() ==null || clientResquestDTO.getPassword().isEmpty()) {
             throw new DonneeNotFillException();
         }
-        if(!pattern.matcher(clientFullDTO.getMail()).matches() ||
-            clientFullDTO.getMail().length() <6 || clientFullDTO.getMail().length() >30 ||
-            clientFullDTO.getNom().length() <2 || clientFullDTO.getNom().length() >30 ||
-            clientFullDTO.getPrenom().length() <2 || clientFullDTO.getPrenom().length() >30 ||
-            clientFullDTO.getPassword().length() <6 || clientFullDTO.getPassword().length() >30) {
+        if(!pattern.matcher(clientResquestDTO.getMail()).matches() ||
+            clientResquestDTO.getMail().length() <6 || clientResquestDTO.getMail().length() >30 ||
+            clientResquestDTO.getNom().length() <2 || clientResquestDTO.getNom().length() >30 ||
+            clientResquestDTO.getPrenom().length() <2 || clientResquestDTO.getPrenom().length() >30 ||
+            clientResquestDTO.getPassword().length() <6 || clientResquestDTO.getPassword().length() >30) {
             throw new DataIncorrectException();
         }
-        if(clientRepository.existsByMail(clientFullDTO.getMail())) {
-            throw new MailExistException(clientFullDTO.getMail());
+        if(clientRepository.existsByMail(clientResquestDTO.getMail())) {
+            throw new MailExistException(clientResquestDTO.getMail());
         }
     }
     /**

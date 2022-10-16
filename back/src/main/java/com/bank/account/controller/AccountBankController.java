@@ -2,11 +2,8 @@ package com.bank.account.controller;
 
 import com.bank.account.dto.AccountBankDTO;
 import com.bank.account.dto.AccountBankFullDTO;
-import com.bank.account.dto.ClientDTO;
-import com.bank.account.dto.ClientFullDTO;
 import com.bank.account.service.AccountBankService;
 import com.bank.account.service.DecodeJwtService;
-import com.bank.account.service.OperationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
