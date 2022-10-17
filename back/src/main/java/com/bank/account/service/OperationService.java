@@ -2,18 +2,15 @@ package com.bank.account.service;
 
 import com.bank.account.dto.*;
 import com.bank.account.entity.AccountBank;
-import com.bank.account.entity.Client;
 import com.bank.account.entity.Operation;
 import com.bank.account.enumeration.TypeOperation;
 import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
-import com.bank.account.repository.ClientRepository;
 import com.bank.account.repository.OperationRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +29,7 @@ public class OperationService {
 
     /**
      * fonction qui savegarde l'opération
-     * @param operationDTO les infos de l'opération
+     * @param operationRequestDTO les infos de l'opération
      * @param mail le mail de l'utilisateur
      * @return RecuDTO reçu de l'opération
      * @throws MailNotFillException
@@ -40,54 +37,55 @@ public class OperationService {
      * @throws OperationSommeNulException
      * @throws TypeOperationNotExistException
      */
-    public RecuDTO saveOperation(OperationDTO operationDTO, String mail) throws MailNotFillException, OperationDonneManquanteExcepion, OperationSommeNulException, TypeOperationNotExistException {
+    public RecuResponseDTO saveOperation(OperationRequestDTO operationRequestDTO, String mail) throws MailNotFillException, OperationDonneManquanteExcepion, OperationSommeNulException, TypeOperationNotExistException {
 
-        controleOperation(operationDTO, mail);
+        controleOperation(operationRequestDTO, mail);
 
-        TypeOperation typeOperation = operationDTO.getTypeOperation();
-        Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationDTO.getIdAccountBank());
-        controleAccountBank(accountBankOptional, operationDTO.getIdAccountBank());
+        TypeOperation typeOperation = operationRequestDTO.getTypeOperation();
+        Optional<AccountBank> accountBankOptional = accountBankRepository.findById(operationRequestDTO.getIdAccountBank());
+        controleAccountBank(accountBankOptional, operationRequestDTO.getIdAccountBank());
 
         AccountBank accountBank = accountBankOptional.get();
         controleAccountBankMail(accountBank, mail);
-        accountBank.setSolde(recupSolde(accountBank, operationDTO));
+        accountBank.setSolde(recupSolde(accountBank, operationRequestDTO));
         accountBank = accountBankRepository.save(accountBank);
-
-        return recupRecu(this.operationRepository.save(recupOperation(operationDTO, accountBank)));
+        Operation operationNew = recupOperation(operationRequestDTO, accountBank);
+        Operation operationSaved = this.operationRepository.save(operationNew);
+        return recupRecu(operationSaved);
     }
 
     /**
      * fonction qui controle les info avaant de caaluler l'opération
-     * @param operationDTO les infos de l'opération
+     * @param operationRequestDTO les infos de l'opération
      * @param mail le mail de l'utilisateur
      * @throws MailNotFillException
      * @throws OperationDonneManquanteExcepion
      * @throws OperationSommeNulException
      */
-    private void controleOperation(OperationDTO operationDTO, String mail) {
+    private void controleOperation(OperationRequestDTO operationRequestDTO, String mail) {
         if(mail ==null ||mail.isEmpty()) {
             throw new MailNotFillException();
         }
-        if(operationDTO==null || operationDTO.getTypeOperation() ==null || operationDTO.getIdAccountBank() ==null|| operationDTO.getSomme() ==null ) {
+        if(operationRequestDTO ==null || operationRequestDTO.getTypeOperation() ==null || operationRequestDTO.getIdAccountBank() ==null|| operationRequestDTO.getSomme() ==null ) {
             throw new OperationDonneManquanteExcepion();
         }
-        if(operationDTO.getSomme()<=0) {
-            throw new OperationSommeNulException(operationDTO.getSomme());
+        if(operationRequestDTO.getSomme()<=0) {
+            throw new OperationSommeNulException(operationRequestDTO.getSomme());
         }
     }
 
     /**
      * fonction qui calcul le solde
      * @param accountBank les info du compte en bank
-     * @param operationDTO les infos de l'opération
+     * @param operationRequestDTO les infos de l'opération
      * @return solde la valeur du solde
      */
-    private Long recupSolde(AccountBank accountBank, OperationDTO operationDTO){
-        if (operationDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
-            return accountBank.getSolde() + operationDTO.getSomme();
-        } else if(operationDTO.getTypeOperation().equals(TypeOperation.WITHDRAWAL)){
-            controleSolde(accountBank, operationDTO);
-            return accountBank.getSolde() - operationDTO.getSomme();
+    private Long recupSolde(AccountBank accountBank, OperationRequestDTO operationRequestDTO){
+        if (operationRequestDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
+            return accountBank.getSolde() + operationRequestDTO.getSomme();
+        } else if(operationRequestDTO.getTypeOperation().equals(TypeOperation.WITHDRAWAL)){
+            controleSolde(accountBank, operationRequestDTO);
+            return accountBank.getSolde() - operationRequestDTO.getSomme();
         } else {
             throw new TypeOperationNotExistException();
         }
@@ -96,23 +94,23 @@ public class OperationService {
     /**
      * fonction qui contrôle le solde
      * @param accountBank les info du compte en bank
-     * @param operationDTO les infos de l'opération
+     * @param operationRequestDTO les infos de l'opération
      * @throws DecouvertException
      * @throws SoldeException
      * @throws DecouvertException
      * @throws DecouvertPlafondException
      */
-    private void controleSolde(AccountBank accountBank, OperationDTO operationDTO) {
+    private void controleSolde(AccountBank accountBank, OperationRequestDTO operationRequestDTO) {
         if(accountBank.getDecouvert() ==null || accountBank.getDecouvert()<0) {
             throw new DecouvertException();
         }
         if(accountBank.getSolde() ==null) {
             throw new SoldeException();
         }
-        if(operationDTO.getSomme() ==null || operationDTO.getSomme()<0) {
+        if(operationRequestDTO.getSomme() ==null || operationRequestDTO.getSomme()<0) {
             throw new SommeErreurException();
         }
-        if(-accountBank.getDecouvert()>accountBank.getSolde() - operationDTO.getSomme()) {
+        if(-accountBank.getDecouvert()>accountBank.getSolde() - operationRequestDTO.getSomme()) {
             throw new DecouvertPlafondException(accountBank.getDecouvert());
         }
     }
@@ -143,12 +141,12 @@ public class OperationService {
 
     /**
      * fonction qui transforme le l'opération
-     * @param operationDTO les infos de l'opération
+     * @param operationRequestDTO les infos de l'opération
      * @param accountBank les info du compte en bank
      * @return operation
      */
-    private Operation recupOperation(OperationDTO operationDTO, AccountBank accountBank) {
-        Operation operation = modelMapper.map(operationDTO, Operation.class);
+    private Operation recupOperation(OperationRequestDTO operationRequestDTO, AccountBank accountBank) {
+        Operation operation = modelMapper.map(operationRequestDTO, Operation.class);
         operation.setDateOperation(LocalDateTime.now());
         operation.setAccountBank(accountBank);
         return operation;
@@ -159,8 +157,8 @@ public class OperationService {
      * @param operation les infos de l'opération
      * @return Recu
      */
-    private RecuDTO recupRecu(Operation operation) {
-        RecuDTO recu = modelMapper.map(operation, RecuDTO.class);
+    private RecuResponseDTO recupRecu(Operation operation) {
+        RecuResponseDTO recu = modelMapper.map(operation, RecuResponseDTO.class);
         recu.setIdAccountBank(operation.getAccountBank().getId());
         return recu;
     }

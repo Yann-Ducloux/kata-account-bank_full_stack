@@ -2,6 +2,8 @@ package com.bank.account.service;
 
 import com.bank.account.dto.HistoriqueOperationDTO;
 import com.bank.account.dto.OperationLightDTO;
+import com.bank.account.dto.OperationRequestDTO;
+import com.bank.account.dto.RecuResponseDTO;
 import com.bank.account.entity.Operation;
 import com.bank.account.enumeration.TypeOperation;
 
@@ -13,6 +15,21 @@ public class OperationDataTest {
         return Operation.builder()
                 .accountBank(AccountBankDataTest.buildDefaultAccountBank())
                 .id(1L)
+                .somme(1000l)
+                .typeOperation(TypeOperation.DEPOSIT)
+                .dateOperation(LocalDateTime.of(24, 11, 10, 12, 0))
+                .build();
+    }
+    static OperationRequestDTO buildDefaultOperationRequest() {
+        return OperationRequestDTO.builder()
+                .idAccountBank(1L)
+                .somme(1000l)
+                .typeOperation(TypeOperation.DEPOSIT)
+                .build();
+    }
+    static RecuResponseDTO buildDefaultRecuResponse() {
+        return RecuResponseDTO.builder()
+                .idAccountBank(1L)
                 .somme(1000l)
                 .typeOperation(TypeOperation.DEPOSIT)
                 .dateOperation(LocalDateTime.of(24, 11, 10, 12, 0))

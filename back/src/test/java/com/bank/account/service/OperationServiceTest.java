@@ -3,7 +3,9 @@ package com.bank.account.service;
 import com.bank.account.dto.AccountBankResponseDTO;
 import com.bank.account.dto.ClientResquestDTO;
 import com.bank.account.dto.HistoriqueOperationDTO;
+import com.bank.account.dto.RecuResponseDTO;
 import com.bank.account.entity.Client;
+import com.bank.account.entity.Operation;
 import com.bank.account.exception.AccountBankHaveNotException;
 import com.bank.account.exception.MailNotFillException;
 import com.bank.account.repository.AccountBankRepository;
@@ -18,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,9 +45,6 @@ class OperationServiceTest {
     @Test
     void getHistoriqueValidTest() {
         //GIVEN
-        ClientResquestDTO clientResquestDTO = ClientDataTest.buildDefaultClient();
-        Client client = modelMapper.map(clientResquestDTO, Client.class);
-        client.setId(1L);
         String mail = "ducloux.y@gmail.com";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
         lenient().when(operationRepository.findByAccountBankId(1L)).thenReturn(List.of(OperationDataTest.buildDefaultOperation()));
@@ -57,9 +57,6 @@ class OperationServiceTest {
     @Test
     void getHistoriqueMailFailedTest() {
         //GIVEN
-        ClientResquestDTO clientResquestDTO = ClientDataTest.buildDefaultClient();
-        Client client = modelMapper.map(clientResquestDTO, Client.class);
-        client.setId(1L);
         String mail = "";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
         lenient().when(operationRepository.findByAccountBankId(1L)).thenReturn(List.of(OperationDataTest.buildDefaultOperation()));
@@ -79,9 +76,6 @@ class OperationServiceTest {
     @Test
     void getHistoriqueAccountNotExistTest() {
         //GIVEN
-        ClientResquestDTO clientResquestDTO = ClientDataTest.buildDefaultClient();
-        Client client = modelMapper.map(clientResquestDTO, Client.class);
-        client.setId(1L);
         String mail = "ducloux.y@gmail.com";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of());
 
@@ -96,5 +90,17 @@ class OperationServiceTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    void saveOperationValidTest() {
+        //GIVEN
+        String mail = "ducloux.y@gmail.com";
+        lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBank()));
+        lenient().when(operationRepository.save(any(Operation.class))).thenReturn(OperationDataTest.buildDefaultOperation());
+
+        //WHEN
+        RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRequest(), mail);
+        //THEN
+        assertEquals(recuResponseDTO, OperationDataTest.buildDefaultRecuResponse());
     }
 }

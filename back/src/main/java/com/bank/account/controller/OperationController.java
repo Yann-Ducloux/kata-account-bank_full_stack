@@ -1,18 +1,12 @@
 package com.bank.account.controller;
 
 import com.bank.account.dto.*;
-import com.bank.account.exception.MailNotFillException;
-import com.bank.account.exception.OperationDonneManquanteExcepion;
-import com.bank.account.exception.OperationSommeNulException;
-import com.bank.account.exception.TypeOperationNotExistException;
 import com.bank.account.service.DecodeJwtService;
 import com.bank.account.service.OperationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,7 +25,7 @@ public class OperationController {
 
     /**
      * fonction qui effectue un opération
-     * @param operationDTO info de l'opération a créer
+     * @param operationRequestDTO info de l'opération a créer
      * @param request
      * @return RecuDTO reçu de l'opération
      * @throws Exception
@@ -42,10 +36,10 @@ public class OperationController {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
             @ApiResponse(code = 404, message = "Not found - The user was not found")
     })
-    RecuDTO nouvelleOperation(@RequestBody OperationDTO operationDTO, HttpServletRequest request) throws Exception {
+    RecuResponseDTO nouvelleOperation(@RequestBody OperationRequestDTO operationRequestDTO, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return this.operationService.saveOperation(operationDTO, mail);
+            return this.operationService.saveOperation(operationRequestDTO, mail);
         } catch (Exception exception) {
             throw new Exception("USER_DISABLED", exception);
         }
