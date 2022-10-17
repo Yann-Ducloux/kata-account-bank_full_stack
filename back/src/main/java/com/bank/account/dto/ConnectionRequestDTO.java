@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 public class ConnectionRequestDTO {
     @Parameter(name="mail", description = "l'adresse mail", example = "ducloux.y@gmail.com")
     private String mail;

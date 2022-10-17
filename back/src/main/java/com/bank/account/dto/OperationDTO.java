@@ -2,10 +2,7 @@ package com.bank.account.dto;
 
 import com.bank.account.entity.AccountBank;
 import com.bank.account.enumeration.TypeOperation;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
 public class OperationDTO {
     Long idAccountBank;
     Long somme;

@@ -1,7 +1,7 @@
 package com.bank.account.service;
 
-import com.bank.account.dto.AccountBankDTO;
-import com.bank.account.dto.AccountBankFullDTO;
+import com.bank.account.dto.AccountBankRequestDTO;
+import com.bank.account.dto.AccountBankResponseDTO;
 import com.bank.account.entity.AccountBank;
 import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
@@ -27,7 +27,7 @@ public class AccountBankService {
 
     /**
      * Cette fonction créer un compte banquaire
-     * @param accountBankDTO les info du compte en bank que l'on va créer
+     * @param accountBankRequestDTO les info du compte en bank que l'on va créer
      * @param mail le mail
      * @return AccountBankFullDTO les infos du compte créer
      * @throws MailNotFillException
@@ -35,26 +35,35 @@ public class AccountBankService {
      * @throws DecouvertException
      * @throws ClientMailExistException
      */
-    public AccountBankFullDTO saveAccountBank(AccountBankDTO accountBankDTO, String mail) {
-        if(mail ==null || mail.isEmpty()) {
-            throw new MailNotFillException();
-        }
-        if(accountBankDTO.getSolde() == null || accountBankDTO.getSolde()<0) {
-            throw new SoldeException();
-        }
-        if(accountBankDTO.getDecouvert() == null || accountBankDTO.getDecouvert()<0) {
-            throw new DecouvertException(accountBankDTO.getDecouvert());
-        }
+    public AccountBankResponseDTO saveAccountBank(AccountBankRequestDTO accountBankRequestDTO, String mail) {
+        controleMail(mail);
+        controleSaveAccountBank(accountBankRequestDTO);
         Optional<Client> clientOptional = clientRepository.findByMail(mail);
         if(!clientOptional.isPresent()) {
             throw new ClientMailExistException(mail);
         }
         AccountBank accountBank = new AccountBank();
         accountBank.setClient(clientOptional.get());
-        accountBank.setDecouvert(accountBankDTO.getDecouvert());
+        accountBank.setDecouvert(accountBankRequestDTO.getDecouvert());
         accountBank.setDateCreation(LocalDateTime.now());
-        accountBank.setSolde(accountBankDTO.getSolde());
-        return modelMapper.map(accountBankRepository.save(accountBank), AccountBankFullDTO.class);
+        accountBank.setSolde(accountBankRequestDTO.getSolde());
+        AccountBank accountBankSaved = accountBankRepository.save(accountBank);
+        return modelMapper.map(accountBankSaved, AccountBankResponseDTO.class);
+    }
+
+    private void controleSaveAccountBank(AccountBankRequestDTO accountBankRequestDTO) {
+        if(accountBankRequestDTO.getSolde() == null || accountBankRequestDTO.getSolde()<0) {
+            throw new SoldeException();
+        }
+        if(accountBankRequestDTO.getDecouvert() == null || accountBankRequestDTO.getDecouvert()<0) {
+            throw new DecouvertException();
+        }
+    }
+
+    private void controleMail(String mail) {
+        if(mail ==null || mail.isEmpty()) {
+            throw new MailNotFillException();
+        }
     }
 
     /**
@@ -63,13 +72,11 @@ public class AccountBankService {
      * @return  List<AccountBankFullDTO> la liste de comptes rattachez au mail
      * @throws MailNotFillException
      */
-    public List<AccountBankFullDTO> getAllAccountBank(String mail) {
-        if(mail ==null ||mail.isEmpty()) {
-            throw new MailNotFillException();
-        }
+    public List<AccountBankResponseDTO> getAllAccountBank(String mail) {
+        controleMail(mail);
         List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
         return accountBanks.stream()
-                .map(accountBank -> modelMapper.map(accountBank, AccountBankFullDTO.class))
+                .map(accountBank -> modelMapper.map(accountBank, AccountBankResponseDTO.class))
                 .collect(Collectors.toList());
     }
 }

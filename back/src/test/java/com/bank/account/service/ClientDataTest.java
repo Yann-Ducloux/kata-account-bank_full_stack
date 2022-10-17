@@ -1,5 +1,6 @@
 package com.bank.account.service;
 
+import com.bank.account.dto.ClientResponseDTO;
 import com.bank.account.dto.ClientResquestDTO;
 import com.bank.account.entity.Client;
 
@@ -10,6 +11,14 @@ public class ClientDataTest {
                 .prenom("Yann")
                 .nom("Ducloux")
                 .password("bjklhdfbjlnkklbgdnf")
+                .build();
+    }
+
+    static ClientResponseDTO buildDefaultClientResponse() {
+        return ClientResponseDTO.builder()
+                .mail("ducloux.y@gmail.com")
+                .prenom("Yann")
+                .nom("Ducloux")
                 .build();
     }
     static Client buildDefaultClientSaved() {

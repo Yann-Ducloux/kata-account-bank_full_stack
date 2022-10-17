@@ -1,7 +1,7 @@
 package com.bank.account.controller;
 
-import com.bank.account.dto.AccountBankDTO;
-import com.bank.account.dto.AccountBankFullDTO;
+import com.bank.account.dto.AccountBankRequestDTO;
+import com.bank.account.dto.AccountBankResponseDTO;
 import com.bank.account.service.AccountBankService;
 import com.bank.account.service.DecodeJwtService;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +27,7 @@ public class AccountBankController extends HandlerInterceptorAdapter {
 
     /**
      * fonction qu crée un compte en bank
-     * @param accountBankDTO info du compte en bank a créer
+     * @param accountBankRequestDTO info du compte en bank a créer
      * @param request
      * @return accountBank info du compte en bank créer
      * @throws Exception
@@ -37,10 +37,10 @@ public class AccountBankController extends HandlerInterceptorAdapter {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
     })
-    AccountBankFullDTO nouveaucompte(@RequestBody AccountBankDTO accountBankDTO,  HttpServletRequest request) throws Exception {
+    AccountBankResponseDTO nouveaucompte(@RequestBody AccountBankRequestDTO accountBankRequestDTO, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return this.accountBankService.saveAccountBank(accountBankDTO, mail);
+            return this.accountBankService.saveAccountBank(accountBankRequestDTO, mail);
         }  catch (Exception exception) {
             throw new Exception(exception.getMessage(), exception);
         }
@@ -58,7 +58,7 @@ public class AccountBankController extends HandlerInterceptorAdapter {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
             @ApiResponse(code = 404, message = "Not found - The account bank was not found")
     })
-    List<AccountBankFullDTO> nouveauClient( HttpServletRequest request) throws Exception {
+    List<AccountBankResponseDTO> nouveauClient(HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
             return this.accountBankService.getAllAccountBank(mail);

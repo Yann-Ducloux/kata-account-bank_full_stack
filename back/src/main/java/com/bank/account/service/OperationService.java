@@ -104,13 +104,13 @@ public class OperationService {
      */
     private void controleSolde(AccountBank accountBank, OperationDTO operationDTO) {
         if(accountBank.getDecouvert() ==null || accountBank.getDecouvert()<0) {
-            throw new DecouvertException(accountBank.getDecouvert());
+            throw new DecouvertException();
         }
         if(accountBank.getSolde() ==null) {
             throw new SoldeException();
         }
         if(operationDTO.getSomme() ==null || operationDTO.getSomme()<0) {
-            throw new DecouvertException(accountBank.getDecouvert());
+            throw new SommeErreurException();
         }
         if(-accountBank.getDecouvert()>accountBank.getSolde() - operationDTO.getSomme()) {
             throw new DecouvertPlafondException(accountBank.getDecouvert());

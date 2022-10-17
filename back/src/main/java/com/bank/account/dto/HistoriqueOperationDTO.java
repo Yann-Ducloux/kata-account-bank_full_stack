@@ -1,9 +1,6 @@
 package com.bank.account.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,9 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
+@ToString
 public class HistoriqueOperationDTO {
     Long AccountBankid;
     private Long solde;
