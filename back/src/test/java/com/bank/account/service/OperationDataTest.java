@@ -27,6 +27,33 @@ public class OperationDataTest {
                 .typeOperation(TypeOperation.DEPOSIT)
                 .build();
     }
+    static OperationRequestDTO buildDefaultOperationSommeNullRequest() {
+        return OperationRequestDTO.builder()
+                .idAccountBank(1L)
+                .typeOperation(TypeOperation.DEPOSIT)
+                .build();
+    }
+    static OperationRequestDTO buildDefaultOperationSommeNegatifRequest() {
+        return OperationRequestDTO.builder()
+                .idAccountBank(1L)
+                .somme(-1000l)
+                .typeOperation(TypeOperation.DEPOSIT)
+                .build();
+    }
+    static OperationRequestDTO buildDefaultOperationRetirerRequest() {
+        return OperationRequestDTO.builder()
+                .idAccountBank(1L)
+                .somme(100l)
+                .typeOperation(TypeOperation.WITHDRAWAL)
+                .build();
+    }
+    static OperationRequestDTO buildDefaultOperationRetirerGrandeSommeRequest() {
+        return OperationRequestDTO.builder()
+                .idAccountBank(1L)
+                .somme(10000l)
+                .typeOperation(TypeOperation.WITHDRAWAL)
+                .build();
+    }
     static RecuResponseDTO buildDefaultRecuResponse() {
         return RecuResponseDTO.builder()
                 .idAccountBank(1L)

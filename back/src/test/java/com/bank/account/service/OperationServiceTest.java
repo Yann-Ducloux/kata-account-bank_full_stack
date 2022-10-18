@@ -6,8 +6,7 @@ import com.bank.account.dto.HistoriqueOperationDTO;
 import com.bank.account.dto.RecuResponseDTO;
 import com.bank.account.entity.Client;
 import com.bank.account.entity.Operation;
-import com.bank.account.exception.AccountBankHaveNotException;
-import com.bank.account.exception.MailNotFillException;
+import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.OperationRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -102,5 +101,88 @@ class OperationServiceTest {
         RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRequest(), mail);
         //THEN
         assertEquals(recuResponseDTO, OperationDataTest.buildDefaultRecuResponse());
+    }
+    @Test
+    void saveOperationSommeMailNullTest() {
+        //GIVEN
+        String mail = "";
+
+        //WHEN
+        Exception exception = assertThrows(MailNotFillException.class, () -> {
+            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail);
+        });
+
+        //THEN
+        String expectedMessage = "le mail n'est pas remplit";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    void saveOperationSommeNullTest() {
+        //GIVEN
+        String mail = "ducloux.y@gmail.com";
+
+        //WHEN
+        Exception exception = assertThrows(OperationDonneManquanteExcepion.class, () -> {
+            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail);
+        });
+
+        //THEN
+        String expectedMessage = "donne manquante";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    void saveOperationDecouvertFailedTest() {
+        //GIVEN
+        String mail = "ducloux.y@gmail.com";
+        Long Somme = -1000L;
+        lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBankEmptyDecouvert()));
+
+        //WHEN
+        Exception exception = assertThrows(DecouvertException.class, () -> {
+            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail);
+        });
+
+        //THEN
+        String expectedMessage = "decouvert erreur";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    void saveOperationSoldeFailedTest() {
+        //GIVEN
+        String mail = "ducloux.y@gmail.com";
+        Long Somme = -1000L;
+        lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBankEmptySolde()));
+
+        //WHEN
+        Exception exception = assertThrows(SoldeException.class, () -> {
+            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail);
+        });
+
+        //THEN
+        String expectedMessage = "solde erreur";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    void saveOperationDecouvertPlafondFailedTest() {
+        //GIVEN
+        String mail = "ducloux.y@gmail.com";
+        Long Somme = -1000L;
+        lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBank()));
+
+        //WHEN
+        Exception exception = assertThrows(DecouvertPlafondException.class, () -> {
+            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerGrandeSommeRequest(), mail);
+        });
+
+        //THEN
+        String expectedMessage = "le plafond du découvert est dépassé decouvert";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }

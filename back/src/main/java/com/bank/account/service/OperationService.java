@@ -82,6 +82,9 @@ public class OperationService {
      */
     private Long recupSolde(AccountBank accountBank, OperationRequestDTO operationRequestDTO){
         if (operationRequestDTO.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
+            if(accountBank.getSolde() ==null) {
+                throw new SoldeException();
+            }
             return accountBank.getSolde() + operationRequestDTO.getSomme();
         } else if(operationRequestDTO.getTypeOperation().equals(TypeOperation.WITHDRAWAL)){
             controleSolde(accountBank, operationRequestDTO);
@@ -107,11 +110,8 @@ public class OperationService {
         if(accountBank.getSolde() ==null) {
             throw new SoldeException();
         }
-        if(operationRequestDTO.getSomme() ==null || operationRequestDTO.getSomme()<0) {
-            throw new SommeErreurException();
-        }
         if(-accountBank.getDecouvert()>accountBank.getSolde() - operationRequestDTO.getSomme()) {
-            throw new DecouvertPlafondException(accountBank.getDecouvert());
+            throw new DecouvertPlafondException();
         }
     }
 
@@ -122,6 +122,9 @@ public class OperationService {
      * @throws ClientMailNotEqualsException
      */
     private void controleAccountBankMail(AccountBank accountBank, String mail) {
+        if(accountBank.getClient() ==null || accountBank.getClient().getMail() ==null) {
+            throw new OperationDonneManquanteExcepion();
+        }
         if (!accountBank.getClient().getMail().equals(mail) ) {
             throw new ClientMailNotEqualsException(mail);
         }

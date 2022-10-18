@@ -43,4 +43,16 @@ public class AccountBankDataTest {
                 .solde(1000l)
                 .build();
     }
+    static AccountBank buildDefaultAccountBankEmptyDecouvert() {
+        return AccountBank.builder()
+                .solde(1000l)
+                .client(ClientDataTest.buildDefaultClientSaved())
+                .build();
+    }
+    static AccountBank buildDefaultAccountBankEmptySolde() {
+        return AccountBank.builder()
+                .decouvert(1000l)
+                .client(ClientDataTest.buildDefaultClientSaved())
+                .build();
+    }
 }
