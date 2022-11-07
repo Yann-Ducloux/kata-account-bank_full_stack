@@ -42,7 +42,7 @@ class OperationServiceTest {
 
 
     @Test
-    void getHistoriqueValidTest() {
+    void getHistoriqueValid() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
@@ -50,11 +50,12 @@ class OperationServiceTest {
 
         //WHEN
         List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);
+
         //THEN
         assertEquals(historiqueOperationDTOListAcutal, List.of(OperationDataTest.buildDefaultHistoriqueOperation()));
     }
     @Test
-    void getHistoriqueMailFailedTest() {
+    void getHistoriqueMailFailedThenThrowException() {
         //GIVEN
         String mail = "";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
@@ -62,36 +63,21 @@ class OperationServiceTest {
 
 
         //WHEN
-        Exception exception = assertThrows(MailNotFillException.class, () -> {
-            List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);
-        });
+        assertThrows(MailNotFillException.class, () -> { operationService.getHistorique(mail); });
 
-        //THEN
-        String expectedMessage = "le mail n'est pas remplit";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
     }
     @Test
-    void getHistoriqueAccountNotExistTest() {
+    void getHistoriqueAccountNotExistThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of());
 
 
         //WHEN
-        Exception exception = assertThrows(AccountBankHaveNotException.class, () -> {
-            List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);
-        });
-
-        //THEN
-        String expectedMessage = "l'utilisateur n'a pas de compte";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(AccountBankHaveNotException.class, () -> {List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);});
     }
     @Test
-    void saveOperationValidTest() {
+    void saveOperationValid() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBank()));
@@ -99,40 +85,25 @@ class OperationServiceTest {
 
         //WHEN
         RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRequest(), mail);
+
         //THEN
         assertEquals(recuResponseDTO, OperationDataTest.buildDefaultRecuResponse());
     }
     @Test
-    void saveOperationSommeMailNullTest() {
+    void saveOperationSommeMailNullThenThrowException() {
         //GIVEN
         String mail = "";
 
         //WHEN
-        Exception exception = assertThrows(MailNotFillException.class, () -> {
-            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail);
-        });
-
-        //THEN
-        String expectedMessage = "le mail n'est pas remplit";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(MailNotFillException.class, () -> { operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail);});
     }
     @Test
-    void saveOperationSommeNullTest() {
+    void saveOperationSommeNullThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
 
         //WHEN
-        Exception exception = assertThrows(OperationDonneManquanteExcepion.class, () -> {
-            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail);
-        });
-
-        //THEN
-        String expectedMessage = "donne manquante";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(OperationDonneManquanteExcepion.class, () -> { operationService.saveOperation(OperationDataTest.buildDefaultOperationSommeNullRequest(), mail); });
     }
     @Test
     void saveOperationDecouvertFailedTest() {
@@ -142,14 +113,7 @@ class OperationServiceTest {
         lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBankEmptyDecouvert()));
 
         //WHEN
-        Exception exception = assertThrows(DecouvertException.class, () -> {
-            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail);
-        });
-
-        //THEN
-        String expectedMessage = "decouvert erreur";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(DecouvertException.class, () -> { operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail); });
     }
     @Test
     void saveOperationSoldeFailedTest() {
@@ -159,30 +123,16 @@ class OperationServiceTest {
         lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBankEmptySolde()));
 
         //WHEN
-        Exception exception = assertThrows(SoldeException.class, () -> {
-            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail);
-        });
-
-        //THEN
-        String expectedMessage = "solde erreur";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(SoldeException.class, () -> { operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerRequest(), mail); });
     }
     @Test
-    void saveOperationDecouvertPlafondFailedTest() {
+    void saveOperationDecouvertPlafondFailedThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         Long Somme = -1000L;
         lenient().when(accountBankRepository.findById(1L)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBank()));
 
         //WHEN
-        Exception exception = assertThrows(DecouvertPlafondException.class, () -> {
-            RecuResponseDTO recuResponseDTO = operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerGrandeSommeRequest(), mail);
-        });
-
-        //THEN
-        String expectedMessage = "le plafond du découvert est dépassé decouvert";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(DecouvertPlafondException.class, () -> {operationService.saveOperation(OperationDataTest.buildDefaultOperationRetirerGrandeSommeRequest(), mail); });
     }
 }

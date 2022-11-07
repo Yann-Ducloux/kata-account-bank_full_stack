@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { CreateClientComponent } from './create-client/create-client.component';
 import { HomeComponent } from './home/home.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'authentification',
     component: AuthentificationComponent
+  },
+  {
+    path: 'welcome',
+    component: WelcomeComponent
   },];
 
 @NgModule({

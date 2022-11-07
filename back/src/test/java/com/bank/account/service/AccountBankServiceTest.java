@@ -1,13 +1,11 @@
 package com.bank.account.service;
 
 import com.bank.account.dto.AccountBankResponseDTO;
-import com.bank.account.dto.ClientResponseDTO;
-import com.bank.account.dto.ConnectionRequestDTO;
 import com.bank.account.entity.AccountBank;
-import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.ClientRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
@@ -40,11 +40,12 @@ class AccountBankServiceTest {
     }
 
     @Test
-    void getAllAccountBankTest() {
+    void getAllAccountBank() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         int sizeList = 1;
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
+
         //WHEN
         List<AccountBankResponseDTO> accountBankResponseDTO = accountBankService.getAllAccountBank(mail);
 
@@ -54,24 +55,16 @@ class AccountBankServiceTest {
     }
 
     @Test
-    void getAllAccountBankMailEmptyTest() {
+    void getAllAccountBankMailEmptyThenThrowException() {
         //GIVEN
         String mail = "";
+
         //WHEN
-
-        Exception exception = assertThrows(MailNotFillException.class, () -> {
-            List<AccountBankResponseDTO> accountBankResponseDTO = accountBankService.getAllAccountBank(mail);
-        });
-
-        String expectedMessage = "le mail n'est pas remplit";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(MailNotFillException.class, () -> { accountBankService.getAllAccountBank(mail); });
     }
 
     @Test
-    void saveAccountBankTest() {
+    void saveAccountBank() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         int sizeList = 1;
@@ -86,43 +79,27 @@ class AccountBankServiceTest {
     }
 
     @Test
-    void saveAccountBankEmptyDecouvertTest() {
+    void saveAccountBankEmptyDecouvertThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         int sizeList = 1;
 
         //WHEN
-        Exception exception = assertThrows(DecouvertException.class, () -> {
-            AccountBankResponseDTO accountBankResponseDTO = accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestEmptyDecouvertDTO(), mail);
-        });
-
-        String expectedMessage = "decouvert erreur";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(DecouvertException.class, () -> { accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestEmptyDecouvertDTO(), mail);});
     }
 
     @Test
-    void saveAccountBankEmptySoldeTest() {
+    void saveAccountBankEmptySoldeThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         int sizeList = 1;
 
         //WHEN
-        Exception exception = assertThrows(SoldeException.class, () -> {
-            AccountBankResponseDTO accountBankResponseDTO = accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestEmptySoldeDTO(), mail);
-        });
-
-        String expectedMessage = "solde erreur";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(SoldeException.class, () -> { accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestEmptySoldeDTO(), mail); });
     }
 
     @Test
-    void saveAccountBankClientEmptyTest() {
+    void saveAccountBankClientEmptyThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
         int sizeList = 1;
@@ -130,15 +107,7 @@ class AccountBankServiceTest {
         lenient().when(clientRepository.findByMail(mail)).thenReturn(Optional.empty());
 
         //WHEN
-        Exception exception = assertThrows(ClientMailExistException.class, () -> {
-            AccountBankResponseDTO accountBankResponseDTO = accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestDTO(), mail);
-        });
-
-        String expectedMessage = "le mail "+ mail + " n'existe pas";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(ClientMailExistException.class, () -> {accountBankService.saveAccountBank(AccountBankDataTest.buildDefaultAccountBankRequestDTO(), mail); });
 
     }
 

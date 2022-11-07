@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { InfoUtilisateur } from 'src/interface/infoUtilisateur';
 import { ApiService } from '../services/api.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-authentification',
@@ -11,7 +13,7 @@ import { ApiService } from '../services/api.service';
 export class AuthentificationComponent implements OnInit {
 
   public authentificationForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { 
+  constructor(private formBuilder: FormBuilder, private storageService:StorageService, private apiService: ApiService,  private router: Router) { 
     this.authentificationForm = formBuilder.group({
       email: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(this.emailRegex)]],
       password: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
@@ -64,13 +66,18 @@ export class AuthentificationComponent implements OnInit {
   console.log(infoUtilisateur);
   this.apiService.authentification(infoUtilisateur).subscribe({
       next: (response) => {
-        console.log(response);
-      alert("vous êtes connecter");
+        this.storageService.saveData('token', response.token);
+        this.redirectionWelcome();
     },
     error: (error) => {
       alert(error.error);
     }
   });
+  }
+
+  
+  redirectionWelcome(){
+    this.router.navigate(['/welcome']);
   }
   isInvalidAndDirty(field: string): boolean {
     const ctrl = this.authentificationForm.get(field);

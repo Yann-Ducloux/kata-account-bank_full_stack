@@ -7,6 +7,7 @@ import com.bank.account.exception.DataIncorrectException;
 import com.bank.account.exception.DonneeNotFillException;
 import com.bank.account.exception.MailExistException;
 import com.bank.account.repository.ClientRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,14 +45,15 @@ class ClientServiceTest {
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.existsByMail(mail)).thenReturn(false);
         lenient().when(clientRepository.save(any(Client.class))).thenReturn(client);
+
         //WHEN
         ClientResponseDTO clientResponseDTO = clientService.saveClient(clientResquestDTO);
 
         //THEN
         assertThat(clientResponseDTO.getMail()).isEqualTo(mail);
     }
-    @Test
-    void saveClientDataEmptyTest() {
+    @Test()
+    void saveEmptyClientThenThrowException() {
         //GIVEN
         ClientResquestDTO clientResquestDTO = ClientDataTest.buildEmptyClient();
         Client client = modelMapper.map(clientResquestDTO, Client.class);
@@ -59,19 +61,12 @@ class ClientServiceTest {
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.existsByMail(mail)).thenReturn(false);
         lenient().when(clientRepository.save(any(Client.class))).thenReturn(client);
+
         //WHEN
-        Exception exception = assertThrows(DonneeNotFillException.class, () -> {
-            ClientResponseDTO clientResponseDTO = clientService.saveClient(clientResquestDTO);
-        });
-
-        String expectedMessage = "toutes les données n'ont pas été remplit";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(DonneeNotFillException.class, () -> {  clientService.saveClient(clientResquestDTO); });
     }
     @Test
-    void saveClientPasswordShortTest() {
+    void saveClientPasswordShortThenThrowException() {
         //GIVEN
         ClientResquestDTO clientResquestDTO = ClientDataTest.buildPasswordShortClient();
         Client client = modelMapper.map(clientResquestDTO, Client.class);
@@ -79,19 +74,12 @@ class ClientServiceTest {
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.existsByMail(mail)).thenReturn(false);
         lenient().when(clientRepository.save(any(Client.class))).thenReturn(client);
+
         //WHEN
-        Exception exception = assertThrows(DataIncorrectException.class, () -> {
-            ClientResponseDTO clientResponseDTO = clientService.saveClient(clientResquestDTO);
-        });
-
-        String expectedMessage = "un des caractére est incorrecte";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertThrows(DataIncorrectException.class, () -> { clientService.saveClient(clientResquestDTO);  });
     }
     @Test
-    void saveClientMailExistTest() {
+    void saveMailExistClientThenThrowException() {
         //GIVEN
         ClientResquestDTO clientResquestDTO = ClientDataTest.buildDefaultClient();
         Client client = modelMapper.map(clientResquestDTO, Client.class);
@@ -99,15 +87,8 @@ class ClientServiceTest {
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.existsByMail(mail)).thenReturn(true);
         lenient().when(clientRepository.save(any(Client.class))).thenReturn(client);
+
         //WHEN
-        Exception exception = assertThrows(MailExistException.class, () -> {
-            ClientResponseDTO clientResponseDTO = clientService.saveClient(clientResquestDTO);
-        });
-
-        String expectedMessage = "le mail existe déjà:" +mail;
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(MailExistException.class, () -> { clientService.saveClient(clientResquestDTO); });
     }
 }

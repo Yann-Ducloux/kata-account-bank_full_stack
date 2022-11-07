@@ -10,11 +10,13 @@ import { AuthentificationComponent } from './authentification/authentification.c
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card'; 
+import { WelcomeComponent } from './welcome/welcome.component';
 @NgModule({
   declarations: [
     AppComponent,
     CreateClientComponent,
     AuthentificationComponent,
+    WelcomeComponent,
     HomeComponent,
   ],
   imports: [

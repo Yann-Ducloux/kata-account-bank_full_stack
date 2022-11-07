@@ -7,6 +7,8 @@ import com.bank.account.enumeration.TypeOperation;
 import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.OperationRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +20,10 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = false)
 public class OperationService {
-    private OperationRepository operationRepository;
-    private AccountBankRepository accountBankRepository;
+    OperationRepository operationRepository;
+    AccountBankRepository accountBankRepository;
     ModelMapper modelMapper = new ModelMapper();
     public OperationService(OperationRepository operationRepository, AccountBankRepository accountBankRepository) {
         this.operationRepository = operationRepository;

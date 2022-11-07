@@ -6,6 +6,7 @@ import com.bank.account.service.OperationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +37,10 @@ public class OperationController {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
             @ApiResponse(code = 404, message = "Not found - The user was not found")
     })
-    RecuResponseDTO nouvelleOperation(@RequestBody OperationRequestDTO operationRequestDTO, HttpServletRequest request) throws Exception {
+    ResponseEntity<RecuResponseDTO> nouvelleOperation(@RequestBody OperationRequestDTO operationRequestDTO, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return this.operationService.saveOperation(operationRequestDTO, mail);
+            return ResponseEntity.ok().body(this.operationService.saveOperation(operationRequestDTO, mail));
         } catch (Exception exception) {
             throw new Exception("USER_DISABLED", exception);
         }
@@ -57,10 +58,10 @@ public class OperationController {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
             @ApiResponse(code = 404, message = "Not found - The historique was not found")
     })
-    List<HistoriqueOperationDTO> nouveauClient(HttpServletRequest request) throws Exception {
+    ResponseEntity<List<HistoriqueOperationDTO>> nouveauClient(HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return this.operationService.getHistorique(mail);
+            return ResponseEntity.ok().body(this.operationService.getHistorique(mail));
         }  catch (Exception exception) {
             throw new Exception(exception.getMessage(), exception);
         }

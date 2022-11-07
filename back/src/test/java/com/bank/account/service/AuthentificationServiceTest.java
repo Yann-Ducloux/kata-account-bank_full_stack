@@ -38,11 +38,12 @@ class AuthentificationServiceTest {
     }
 
     @Test
-    void saveAuthentificationTest() {
+    void saveAuthentification() {
         //GIVEN
         ConnectionRequestDTO connectionRequestDTO = ConnectionDataTest.buildDefaultConnection();
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.findByMail(mail)).thenReturn(Optional.of(ClientDataTest.buildDefaultClientSaved()));
+
         //WHEN
         Boolean booleanConnection = authentificationService.connection(connectionRequestDTO);
 
@@ -51,54 +52,33 @@ class AuthentificationServiceTest {
     }
 
     @Test
-    void saveAuthentificationMailNotExistTest() {
+    void saveAuthentificationMailNotExistThenThrowException() {
         //GIVEN
         ConnectionRequestDTO connectionRequestDTO = ConnectionDataTest.buildDefaultConnection();
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.findByMail(mail)).thenReturn(Optional.empty());
+
         //WHEN
-        Exception exception = assertThrows(MailIsInvalidEception.class, () -> {
-            Boolean booleanConnection = authentificationService.connection(connectionRequestDTO);
-        });
-
-        String expectedMessage = "Mail n'existe pas:" +mail;
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(MailIsInvalidEception.class, () -> { authentificationService.connection(connectionRequestDTO); });
     }
 
     @Test
-    void saveAuthentificationDataEmptyTest() {
+    void saveAuthentificationDataEmptyThenThrowException() {
         //GIVEN
         ConnectionRequestDTO connectionRequestDTO = ConnectionDataTest.buildEmptyConnection();
         String mail = "ducloux.y@gmail.com";
+
         //WHEN
-        Exception exception = assertThrows(DonneeNotFillException.class, () -> {
-            Boolean booleanConnection = authentificationService.connection(connectionRequestDTO);
-        });
-
-        String expectedMessage = "toutes les données n'ont pas été remplit";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(DonneeNotFillException.class, () -> {authentificationService.connection(connectionRequestDTO); });
     }
     @Test
-    void saveAuthentificationPasswordFalseTest() {
+    void saveAuthentificationPasswordFalseThenThrowException() {
         //GIVEN
         ConnectionRequestDTO connectionRequestDTO = ConnectionDataTest.buildDefaultConnection();
         String mail = "ducloux.y@gmail.com";
         lenient().when(clientRepository.findByMail(mail)).thenReturn(Optional.of(ClientDataTest.buildDefaultClientPAsswordFalseSaved()));
+
         //WHEN
-        Exception exception = assertThrows(ClientPasswordFalseException.class, () -> {
-            Boolean booleanConnection = authentificationService.connection(connectionRequestDTO);
-        });
-
-        String expectedMessage = "Le mot de passe est faux";
-        String actualMessage = exception.getMessage();
-
-        //THEN
-        assertTrue(actualMessage.contains(expectedMessage));
+        Exception exception = assertThrows(ClientPasswordFalseException.class, () -> { authentificationService.connection(connectionRequestDTO); });
     }
 }

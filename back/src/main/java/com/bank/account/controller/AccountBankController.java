@@ -7,6 +7,7 @@ import com.bank.account.service.DecodeJwtService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -37,10 +38,10 @@ public class AccountBankController extends HandlerInterceptorAdapter {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
     })
-    AccountBankResponseDTO nouveaucompte(@RequestBody AccountBankRequestDTO accountBankRequestDTO, HttpServletRequest request) throws Exception {
+    ResponseEntity<AccountBankResponseDTO> nouveauCompte(@RequestBody AccountBankRequestDTO accountBankRequestDTO, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return this.accountBankService.saveAccountBank(accountBankRequestDTO, mail);
+            return ResponseEntity.ok().body(this.accountBankService.saveAccountBank(accountBankRequestDTO, mail));
         }  catch (Exception exception) {
             throw new Exception(exception.getMessage(), exception);
         }

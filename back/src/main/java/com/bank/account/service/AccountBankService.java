@@ -7,6 +7,9 @@ import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
 import com.bank.account.repository.AccountBankRepository;
 import com.bank.account.repository.ClientRepository;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +19,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = false)
 public class AccountBankService {
-    private AccountBankRepository accountBankRepository;
-    private ClientRepository clientRepository;
+    AccountBankRepository accountBankRepository;
+    ClientRepository clientRepository;
     ModelMapper modelMapper = new ModelMapper();
-    public AccountBankService(AccountBankRepository accountBankRepository, ClientRepository clientRepository) {
+    public AccountBankService(AccountBankRepository accountBankRepository,ClientRepository clientRepository) {
         this.accountBankRepository = accountBankRepository;
         this.clientRepository = clientRepository;
     }
-
     /**
      * Cette fonction créer un compte banquaire
      * @param accountBankRequestDTO les info du compte en bank que l'on va créer

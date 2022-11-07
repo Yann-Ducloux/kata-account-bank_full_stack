@@ -5,6 +5,8 @@ import com.bank.account.dto.ClientResquestDTO;
 import com.bank.account.entity.Client;
 import com.bank.account.exception.*;
 import com.bank.account.repository.ClientRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = false)
 public class ClientService {
 
-    private ClientRepository clientRepository;
+    ClientRepository clientRepository;
     ModelMapper modelMapper = new ModelMapper();
     static final String PREFIXE_PASSWORD = "jklhdfgjkDFGKSL5654lmsdfgjklm";
     static final String SUFFIXE_PASSWORD = "kjlfghn425425fth564FGDFG";
