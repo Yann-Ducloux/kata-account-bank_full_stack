@@ -49,19 +49,19 @@ public class OperationController {
     /**
      *  fonction qui récupére la l'historique de toutes les opération
      * @param request
-     * @return  List<HistoriqueOperationDTO> la liste des infos des opération
+     * @return  HistoriqueOperationDTO la liste des infos des opération
      * @throws Exception
      */
-    @GetMapping("/historique")
+    @GetMapping("/historique/{accountBankId}")
     @ApiOperation(value = "get a historique of operation by user", notes = "list historique a user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved"),
             @ApiResponse(code = 404, message = "Not found - The historique was not found")
     })
-    ResponseEntity<List<HistoriqueOperationDTO>> nouveauClient(HttpServletRequest request) throws Exception {
+    ResponseEntity<HistoriqueOperationDTO> nouveauClient(@PathVariable("accountBankId") Long accountBankId, HttpServletRequest request) throws Exception {
         try {
             String mail = decodeJwtService.decodeJWT(request.getHeader("Authorization")).get("sub");
-            return ResponseEntity.ok().body(this.operationService.getHistorique(mail));
+            return ResponseEntity.ok().body(this.operationService.getHistorique(mail, accountBankId));
         }  catch (Exception exception) {
             throw new Exception(exception.getMessage(), exception);
         }

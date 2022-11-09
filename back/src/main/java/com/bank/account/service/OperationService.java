@@ -176,33 +176,32 @@ public class OperationService {
      * @throws MailNotFillException
      * @throws AccountBankHaveNotException
      */
-    public List<HistoriqueOperationDTO> getHistorique(String mail) {
+    public HistoriqueOperationDTO getHistorique(String mail, Long accountBankId) {
         if(mail ==null || mail.isEmpty()) {
             throw new MailNotFillException();
         }
-        List<AccountBank> accountBanks = accountBankRepository.findByMail(mail);
-        if(accountBanks.isEmpty()) {
-            throw new AccountBankHaveNotException();
+        Optional<AccountBank> accountBank = accountBankRepository.findByMailAndAccountBankId(mail, accountBankId);
+        if(accountBank.isEmpty()) {
+            throw new AccountBankErrorException();
         }
-        return recupHistorique(accountBanks);
+        return recupHistorique(accountBank.get());
     }
 
     /**
-     * fonction qui récupére l'historique d'une personne
-     * @param accountBanks les info du compte en bank
-     * @return List<HistoriqueOperationDTO> l'historiaqqque de toute les opérations
+     * fonction qui récupére l'historique d'un compte
+     * @param accountBank les info du compte en bank
+     * @return HistoriqueOperationDTO l'historique de toute les opérations
      */
-    private List<HistoriqueOperationDTO> recupHistorique(List<AccountBank> accountBanks) {
-       return accountBanks.stream().map(accountBank-> {
-            HistoriqueOperationDTO historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);
-            historiqueOperationDTO.setAccountBankid(accountBank.getId());
-            List<Operation>  operations = this.operationRepository.findByAccountBankId(accountBank.getId());
-            historiqueOperationDTO.setOperationLightDTO(
-                    operations.stream()
-                            .map(operation -> modelMapper.map(operation, OperationLightDTO.class))
-                            .collect(Collectors.toList())
-            );
-            return historiqueOperationDTO;
-        }).collect(toList());
+    private HistoriqueOperationDTO recupHistorique(AccountBank accountBank) {
+        HistoriqueOperationDTO historiqueOperationDTO = modelMapper.map(accountBank, HistoriqueOperationDTO.class);
+        List<Operation>  operations = this.operationRepository.findByAccountBankId(accountBank.getId());
+        historiqueOperationDTO.setAccountBankid(accountBank.getId());
+        historiqueOperationDTO.setOperationLightDTO(
+                operations.stream()
+                        .map(operation -> modelMapper.map(operation, OperationLightDTO.class))
+                        .collect(Collectors.toList())
+        );
+
+       return historiqueOperationDTO;
     }
 }

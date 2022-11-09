@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin
 public class AccountBankController extends HandlerInterceptorAdapter {
     private AccountBankService accountBankService;
     private DecodeJwtService decodeJwtService;

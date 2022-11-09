@@ -45,36 +45,39 @@ class OperationServiceTest {
     void getHistoriqueValid() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
-        lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
-        lenient().when(operationRepository.findByAccountBankId(1L)).thenReturn(List.of(OperationDataTest.buildDefaultOperation()));
+        Long numeroCompte = 1L;
+        lenient().when(accountBankRepository.findByMailAndAccountBankId(mail, numeroCompte)).thenReturn(Optional.of(AccountBankDataTest.buildDefaultAccountBank()));
+        lenient().when(operationRepository.findByAccountBankId(numeroCompte)).thenReturn(List.of(OperationDataTest.buildDefaultOperation()));
 
         //WHEN
-        List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);
+        HistoriqueOperationDTO historiqueOperationDTOAcutal = operationService.getHistorique(mail, numeroCompte);
 
         //THEN
-        assertEquals(historiqueOperationDTOListAcutal, List.of(OperationDataTest.buildDefaultHistoriqueOperation()));
+        assertEquals(historiqueOperationDTOAcutal, OperationDataTest.buildDefaultHistoriqueOperation());
     }
     @Test
     void getHistoriqueMailFailedThenThrowException() {
         //GIVEN
         String mail = "";
+        Long numeroCompte = 1L;
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of(AccountBankDataTest.buildDefaultAccountBank()));
         lenient().when(operationRepository.findByAccountBankId(1L)).thenReturn(List.of(OperationDataTest.buildDefaultOperation()));
 
 
         //WHEN
-        assertThrows(MailNotFillException.class, () -> { operationService.getHistorique(mail); });
+        assertThrows(MailNotFillException.class, () -> { operationService.getHistorique(mail, numeroCompte); });
 
     }
     @Test
     void getHistoriqueAccountNotExistThenThrowException() {
         //GIVEN
         String mail = "ducloux.y@gmail.com";
+        Long numeroCompte = 1L;
         lenient().when(accountBankRepository.findByMail(mail)).thenReturn(List.of());
 
 
         //WHEN
-        assertThrows(AccountBankHaveNotException.class, () -> {List<HistoriqueOperationDTO> historiqueOperationDTOListAcutal = operationService.getHistorique(mail);});
+        assertThrows(AccountBankErrorException.class, () -> {operationService.getHistorique(mail, numeroCompte);});
     }
     @Test
     void saveOperationValid() {

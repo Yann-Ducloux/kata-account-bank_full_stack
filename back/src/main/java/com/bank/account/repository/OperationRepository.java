@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface OperationRepository extends JpaRepository<Operation, Long> {
-    @Query(value = "SELECT o FROM Operation o WHERE o.accountBank.id  = :accountBankId  ORDER BY o.dateOperation ")
+    @Query(value = "SELECT o FROM Operation o WHERE o.accountBank.id  = :accountBankId  ORDER BY o.dateOperation DESC")
     List<Operation> findByAccountBankId(Long accountBankId);
 }
