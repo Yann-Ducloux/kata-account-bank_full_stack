@@ -10,13 +10,16 @@ import { AuthentificationComponent } from './authentification/authentification.c
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card'; 
+import { MatTableModule } from '@angular/material/table'  
 import { WelcomeComponent } from './welcome/welcome.component';
+import { HistoriqueComponent } from './historique/historique.component';
 @NgModule({
   declarations: [
     AppComponent,
     CreateClientComponent,
     AuthentificationComponent,
     WelcomeComponent,
+    HistoriqueComponent,
     HomeComponent,
   ],
   imports: [
@@ -26,7 +29,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

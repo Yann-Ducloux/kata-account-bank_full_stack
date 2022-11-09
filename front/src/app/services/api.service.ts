@@ -6,6 +6,7 @@ import { AccountBankRequestDTO } from 'src/interface/accountBankRequestDTO';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ClientDTO } from 'src/interface/clientDTO';
 import { ClientFullDTO } from 'src/interface/clientFullDTO';
+import { HistoriqueOperationDTO } from 'src/interface/historiqueOperationDTO';
 import { InfoUtilisateur } from 'src/interface/infoUtilisateur';
 import { StorageService } from './storage.service';
 
@@ -20,19 +21,37 @@ export class ApiService {
     return this.http.post<ClientDTO>(environment.baseUrl+'/client', client);
   }
   
-  createAccountBank(accountBank: AccountBankRequestDTO): Observable<any> {
-    let auth_token = this.getToken();    
-    console.log('yann2');
+  createAccountBank(accountBank: AccountBankRequestDTO): Observable<any> 
+  {
+    let auth_token = this.getToken();   
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer '+ auth_token,
       });
     const requestOptions = { headers: headers };  
-    console.log(accountBank); 
-    console.log(auth_token);
-    console.log(headers);
-    console.log(requestOptions);
     return this.http.post<AccountBankResponseDTO>(environment.baseUrl+'/account_bank', accountBank,requestOptions);
+  }
+  
+  getHistorique(): Observable<any> 
+  {
+    let auth_token = this.getToken();    
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ auth_token,
+      });
+    const requestOptions = { headers: headers };  
+    return this.http.get<HistoriqueOperationDTO[]>(environment.baseUrl+'/historique/2', requestOptions);
+  }
+  
+  getAccountBankAll(): Observable<any> 
+  {
+    let auth_token = this.getToken();    
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ auth_token,
+      });
+    const requestOptions = { headers: headers };  
+    return this.http.get<AccountBankResponseDTO[]>(environment.baseUrl+'/account_bank/find', requestOptions);
   }
 
   authentification(infoUtilisateur: InfoUtilisateur): Observable<any> {
