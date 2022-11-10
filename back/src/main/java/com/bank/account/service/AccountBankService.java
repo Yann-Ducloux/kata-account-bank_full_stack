@@ -55,10 +55,10 @@ public class AccountBankService {
     }
 
     private void controleSaveAccountBank(AccountBankRequestDTO accountBankRequestDTO) {
-        if(accountBankRequestDTO.getSolde() == null || accountBankRequestDTO.getSolde()<0) {
+        if(accountBankRequestDTO.getSolde() == null || accountBankRequestDTO.getSolde()<0 || accountBankRequestDTO.getSolde()>1000000000) {
             throw new SoldeException();
         }
-        if(accountBankRequestDTO.getDecouvert() == null || accountBankRequestDTO.getDecouvert()<0) {
+        if(accountBankRequestDTO.getDecouvert() == null || accountBankRequestDTO.getDecouvert()<0 || accountBankRequestDTO.getDecouvert()>1000000000) {
             throw new DecouvertException();
         }
     }

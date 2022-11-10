@@ -32,7 +32,7 @@ export class ApiService {
     return this.http.post<AccountBankResponseDTO>(environment.baseUrl+'/account_bank', accountBank,requestOptions);
   }
   
-  getHistorique(): Observable<any> 
+  getHistorique(accountBankId: number): Observable<any> 
   {
     let auth_token = this.getToken();    
     const headers = new HttpHeaders({
@@ -40,7 +40,7 @@ export class ApiService {
         'Authorization': 'Bearer '+ auth_token,
       });
     const requestOptions = { headers: headers };  
-    return this.http.get<HistoriqueOperationDTO[]>(environment.baseUrl+'/historique/2', requestOptions);
+    return this.http.get<HistoriqueOperationDTO[]>(environment.baseUrl+'/historique/'+accountBankId, requestOptions);
   }
   
   getAccountBankAll(): Observable<any> 

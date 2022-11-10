@@ -1,0 +1,47 @@
+<mat-card>     
+  <div class="button-container" >
+    <button mat-fab color="primary" aria-label="icon" (click)="toHome()">
+        <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
+    </button>
+    <button mat-fab color="primary" aria-label="icon" (click)="deconnection()">
+        <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
+    </button>
+  </div>
+    <div class="container">
+        <p>Opération</p>
+    </div>
+</mat-card>
+<br>
+<div class="container"><mat-card>
+    <div class="row">
+        <div class="col-md-8">
+            <form [formGroup]="operationForm" (ngSubmit)="onFormSubmitOperation()">
+              <mat-form-field appearance="fill">
+                <mat-label>Numéro de compte</mat-label>
+                <mat-select>
+                  <mat-option value="one">First option</mat-option>
+                  <mat-option value="two">Second option</mat-option>
+                </mat-select>
+              </mat-form-field>
+                <div class="form-group">
+                    <label>Somme</label>
+                    <input  formControlName="somme"  type="number" name="somme" id="somme" class="form-control" [ngClass]="listErrorSomme.length > 0 ? 'champ_invalide' :''">
+                    <ul>
+                        <li class="text_error" *ngFor="let errorSomme of listErrorSomme">{{errorSomme}}</li>
+                    </ul>             
+                </div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Type d'opération</mat-label>
+                  <mat-select>
+                    <mat-option value="one">Retirer</mat-option>
+                    <mat-option value="two">Déposer</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <button mat-raised-button color="primary" class="mat-button-left">Effectuer l'opération</button>              
+                <button mat-raised-button color="accent" class="mat-button-left" (click)="toHome()">Annuler</button>
+            </form>
+        </div>
+    </div>
+  </mat-card>
+  </div>

@@ -1,0 +1,41 @@
+<mat-card>
+    <div class="button-container" >
+      <button mat-fab color="primary" aria-label="icon" (click)="toHome()" class="mat-button-left">
+          <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
+      </button>
+      <button mat-fab color="primary" aria-label="icon" (click)="deconnection()" class="mat-button-left">
+          <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
+      </button>
+    </div>
+    <div class="container">    
+
+        <p>Création de compte banquaire</p>
+    </div>
+</mat-card>
+<br>
+<div class="container"><mat-card>
+    <div class="row">
+        <div class="col-md-8">
+            <form [formGroup]="accountBankForm" (ngSubmit)="onFormSubmitAccountBank()">
+                <div class="form-group">
+                    <label>Solde</label>
+                    <input  formControlName="solde"  type="number" name="solde" id="solde" class="form-control" [ngClass]="listErrorSolde.length > 0 ? 'champ_invalide' :''">
+                    <ul>
+                        <li class="text_error" *ngFor="let errorSolde of listErrorSolde">{{errorSolde}}</li>
+                    </ul>             
+                </div>
+                <div class="form-group">
+                    <label>Découvert</label>
+                    <input  formControlName="decouvert"  type="number" name="decouvert" id="decouvert" class="form-control"  [ngClass]="listErrorDecouvert.length > 0 ? 'champ_invalide' :''">
+                    <ul>
+                        <li class="text_error"*ngFor="let errorDecouvert of listErrorDecouvert">{{errorDecouvert}}</li>
+                    </ul>
+                </div>
+                <br>
+                <button mat-raised-button color="primary" class="mat-button-left">Créer un compte</button>              
+                <button mat-raised-button color="accent" class="mat-button-left" (click)="toHome()">Annuler</button>
+            </form>
+        </div>
+    </div>
+  </mat-card>
+  </div>

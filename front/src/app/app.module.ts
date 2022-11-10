@@ -12,7 +12,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card'; 
 import { MatTableModule } from '@angular/material/table'  
 import { WelcomeComponent } from './welcome/welcome.component';
+import {MatIconModule} from '@angular/material/icon';
 import { HistoriqueComponent } from './historique/historique.component';
+import { AccountBankComponent } from './account-bank/account-bank.component';
+import { OperationComponent } from './operation/operation.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +26,8 @@ import { HistoriqueComponent } from './historique/historique.component';
     WelcomeComponent,
     HistoriqueComponent,
     HomeComponent,
+    AccountBankComponent,
+    OperationComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +37,10 @@ import { HistoriqueComponent } from './historique/historique.component';
     BrowserAnimationsModule,
     MatButtonModule,
     MatCardModule,
-    MatTableModule
+    MatTableModule,
+    MatIconModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

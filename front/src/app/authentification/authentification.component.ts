@@ -91,4 +91,7 @@ export class AuthentificationComponent implements OnInit {
     authentificationForm.resetForm();
   }
 
+  toHome(){
+    this.router.navigate(['/']);
+  }
 }

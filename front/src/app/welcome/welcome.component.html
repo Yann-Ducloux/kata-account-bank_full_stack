@@ -1,10 +1,26 @@
 <mat-card>
+  <div class="button-container" >
+    <button mat-fab color="primary" aria-label="icon" (click)="deconnection()">
+        <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
+    </button>
+  </div>
     <div class="container">
         <p>Acceuil</p>
     </div>
 </mat-card>
 <br>
 <div class="container">
+  <mat-card>
+    
+  <div class="button-row">
+    <button mat-raised-button color="primary" class="mat-button-left" (click)="goToAccountBank()">Création de compte banquaire</button>
+    <button mat-raised-button color="primary" class="mat-button-left" (click)="goToOperation()" *ngIf="this.accountBankResponse.length>0">Opération</button>
+  </div>
+
+</mat-card>
+</div>
+<br>
+<div class="container" *ngIf="this.accountBankResponse.length>0">
 <table mat-table [dataSource]="accountBankResponse" class="mat-elevation-z8 account-table">
     <!-- Numéro Column -->
     <ng-container matColumnDef="numero">
@@ -31,6 +47,6 @@
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row (click)="getToHistorique(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row (click)="goToHistorique(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>

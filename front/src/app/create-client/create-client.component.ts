@@ -96,4 +96,7 @@ export class CreateClientComponent implements OnInit {
   resetUserForm(userForm:NgForm) {
     userForm.resetForm();
   }
+  toHome(){
+    this.router.navigate(['/']);
+  }
 }

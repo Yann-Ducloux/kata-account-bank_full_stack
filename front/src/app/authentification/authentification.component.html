@@ -1,4 +1,16 @@
-<mat-card><div class="container">
+<mat-card>        
+    <div class="button-container" (click)="toHome()">
+      <button mat-fab color="primary" aria-label="icon">
+          <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
+      </button>
+    </div>
+    <div class="container">    
+        <p>Authentification</p>
+    </div>
+</mat-card>
+<br>
+<div class="container">
+    <mat-card>
     <div class="row">
         <div class="col-md-8">
             <form [formGroup]="authentificationForm" (ngSubmit)="onFormSubmitAuthentification()">
@@ -20,5 +32,5 @@
                 <button mat-raised-button color="primary">envoie</button>
             </form>
         </div>
-    </div>
-</div></mat-card>
+    </div></mat-card>
+</div>
