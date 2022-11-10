@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class StorageService {
   constructor() { }
+  accountBankId?: number;
+  accountBankIds?: number[];
   public saveData(key: string, value: string) {
     localStorage.setItem(key, value);
   }
@@ -18,5 +20,17 @@ export class StorageService {
 
   public clearData() {
     localStorage.clear();
+  }
+  public setaccountBankId(accountBankId: number) {
+    this.accountBankId = accountBankId;
+  }
+  public getaccountBankId() {
+    return this.accountBankId;
+  }
+  public setaccountBankIds(accountBankIds: number[]) {
+    this.accountBankIds = accountBankIds;
+  }
+  public getaccountBankIds() {
+    return this.accountBankId;
   }
 }

@@ -48,7 +48,7 @@ export class WelcomeComponent implements OnInit {
   goToHistorique(accountBankResponseDTO:AccountBankResponseDTO){
   console.log(accountBankResponseDTO.id);  
     if(accountBankResponseDTO!=null && accountBankResponseDTO.id!=null) {
-      this.storageService.saveData('accountBankId', accountBankResponseDTO.id.toString());
+      this.storageService.setaccountBankId(accountBankResponseDTO.id);
       this.router.navigate(['/historique']);
     }
   }

@@ -15,12 +15,14 @@ export class HistoriqueComponent implements OnInit {
   constructor(private apiService: ApiService, private storageService:StorageService, private router: Router) { }
   historique !:HistoriqueOperationDTO;
   operationLightDTO :OperationLightDTO[] =[];
+  accountBankId:number | undefined;
   ngOnInit(): void {
     this.recupHisto();
   }
   recupHisto() {
-    if(this.storageService.getData('accountBankId')!=null && Number(this.storageService.getData('accountBankId'))!= NaN){
-      this.apiService.getHistorique(Number(this.storageService.getData('accountBankId'))).subscribe({
+    this.accountBankId = this.storageService.getaccountBankId();
+    if(this.accountBankId!=null && this.accountBankId!= undefined){
+      this.apiService.getHistorique(this.accountBankId).subscribe({
         next: (response) => {
           this.historique = response;
           console.log(this.historique);
