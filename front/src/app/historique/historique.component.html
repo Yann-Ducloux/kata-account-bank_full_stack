@@ -23,9 +23,9 @@
 <br>
 
 
-<div class="container" *ngIf="operationLightDTO !== undefined">
+<div class="container" *ngIf="historique!= undefined && historique.operationLightDTO !== undefined">
 
-  <table mat-table [dataSource]="operationLightDTO" class="mat-elevation-z8 operation-table">
+  <table mat-table [dataSource]="historique.operationLightDTO" class="mat-elevation-z8 operation-table">
     <!-- Somme Column -->
     <ng-container matColumnDef="somme">
       <th mat-header-cell *matHeaderCellDef>Somme</th>
@@ -35,7 +35,7 @@
     <!-- date Column -->
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let element">{{element.somme}}</td>
+      <td mat-cell *matCellDef="let element">{{element.dateOperation| date: 'dd/MM/YYYY' }}</td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
