@@ -29,7 +29,11 @@
     <!-- Somme Column -->
     <ng-container matColumnDef="somme">
       <th mat-header-cell *matHeaderCellDef>Somme</th>
-      <td mat-cell *matCellDef="let element">{{element.somme}}</td>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.typeOperation === 'DEPOSIT'" class="color_green">+ {{element.somme}}</span>
+        <span *ngIf="element.typeOperation === 'WITHDRAWAL'" class="color_red">- {{element.somme}}</span>
+        
+      </td>
     </ng-container>
   
     <!-- date Column -->
