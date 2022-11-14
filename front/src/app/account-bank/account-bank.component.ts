@@ -29,21 +29,25 @@ export class AccountBankComponent implements OnInit {
   onFormSubmitAccountBank() {
     this.listErrorSolde = [];
     this.listErrorDecouvert = [];    
-    if(!this.isInvalidAndDirty('solde') && this.accountBankForm.get('solde')?.value!=""
-    && !this.isInvalidAndDirty('decouvert') && this.accountBankForm.get('decouvert')?.value!="") {
+    if(!this.isInvalidAndDirty('solde') && this.controleChamp('solde')
+    && !this.isInvalidAndDirty('decouvert') && this.controleChamp('decouvert')) {
       this.envoieDonnee();
     } else {
-      this.listErrorSolde = this.controleChamp(this.accountBankForm.get('solde')?.value); 
-      this.listErrorDecouvert = this.controleChamp(this.accountBankForm.get('decouvert')?.value);
+      this.listErrorSolde = this.recupMessageError(this.accountBankForm.get('solde')?.value); 
+      this.listErrorDecouvert = this.recupMessageError(this.accountBankForm.get('decouvert')?.value);
     }
   }
-  controleChamp(champ: string) :  String[]{
+  controleChamp(champ: string): boolean {
+    return champ !=null && champ != "" && !isNaN(Number(champ))
+    && Number(champ)>=0 && Number(champ)<=1000000000;
+  }
+  recupMessageError(champ: string) :  String[]{
     var listError:String[] = [];
     if(champ ==null || champ == "" ) {
       listError.push("le champs n'est pas remplit");
     } else if(isNaN(Number(champ))){
       listError.push("le champ est incorrecte");
-    }else if(Number(champ)<0 || Number(champ)>1000000000) {
+    } else if(Number(champ)<0 || Number(champ)>1000000000) {
       listError.push("le minimum et 0 et le maximum est 1000000000");
     }
     return listError;

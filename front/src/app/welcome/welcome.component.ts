@@ -42,7 +42,8 @@ export class WelcomeComponent implements OnInit {
       }
     });
     if(accountBankIds.length>0) {
-      this.router.navigate(['/operation', {accountBanks: accountBankIds}]);
+      this.storageService.setaccountBankIds(accountBankIds);
+      this.router.navigate(['/operation']);
     }
   }
   goToHistorique(accountBankResponseDTO:AccountBankResponseDTO){

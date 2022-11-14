@@ -31,6 +31,6 @@ export class StorageService {
     this.accountBankIds = accountBankIds;
   }
   public getaccountBankIds() {
-    return this.accountBankId;
+    return this.accountBankIds;
   }
 }

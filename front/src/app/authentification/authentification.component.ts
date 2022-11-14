@@ -27,15 +27,15 @@ export class AuthentificationComponent implements OnInit {
   onFormSubmitAuthentification() {
     this.listErrorMail = [];
     this.listErrorPassword = [];
-    if(!this.isInvalidAndDirty('email') && this.authentificationForm.get('email')?.value!=""
-    && !this.isInvalidAndDirty('password') && this.authentificationForm.get('password')?.value!="") {
+    if(!this.isInvalidAndDirty('email') && this.controleChampMail()
+    && !this.isInvalidAndDirty('password') && this.controleChamp(this.authentificationForm.get('password')?.value)) {
       this.envoieDonnee();
     } else {
-      this.listErrorMail = this.controleChampMail(); 
-      this.listErrorPassword = this.controleChamp(this.authentificationForm.get('password')?.value);
+      this.listErrorMail = this.recupMailMessageError(); 
+      this.listErrorPassword = this.recupMessageError(this.authentificationForm.get('password')?.value);
     }
   }
-  controleChampMail() : String[]{
+  recupMailMessageError() : String[]{
     var listError:String[] = [];
     if(this.authentificationForm.get('email')?.value == "") {
       listError.push("le champs n'est pas remplit");
@@ -50,7 +50,15 @@ export class AuthentificationComponent implements OnInit {
     }
     return listError;
   }
-  controleChamp(champ: string) :  String[]{
+  controleChampMail() : boolean{
+    var mail:String = this.authentificationForm.get('email')?.value;
+    return (this.authentificationForm.get('email')?.value != "" &&
+     !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
+  }
+  controleChamp(champ: string) :  boolean{
+    return (champ !=null && champ != "" && champ.length>=6 && champ.length<=30);
+  }
+  recupMessageError(champ: string) :  String[]{
     var listError:String[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");

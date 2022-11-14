@@ -21,7 +21,7 @@ export class ApiService {
     return this.http.post<ClientDTO>(environment.baseUrl+'/client', client);
   }
   
-  createAccountBank(accountBank: AccountBankRequestDTO): Observable<any> 
+  createAccountBank(accountBank: AccountBankRequestDTO): Observable<AccountBankResponseDTO> 
   {
     let auth_token = this.getToken();   
     const headers = new HttpHeaders({
@@ -43,7 +43,7 @@ export class ApiService {
     return this.http.get<HistoriqueOperationDTO[]>(environment.baseUrl+'/historique/'+accountBankId, requestOptions);
   }
   
-  getAccountBankAll(): Observable<any> 
+  getAccountBankAll(): Observable<AccountBankResponseDTO[]> 
   {
     let auth_token = this.getToken();    
     const headers = new HttpHeaders({
@@ -55,7 +55,7 @@ export class ApiService {
   }
 
   authentification(infoUtilisateur: InfoUtilisateur): Observable<any> {
-    return this.http.post<String>(environment.baseUrl+'/authentification', infoUtilisateur);
+    return this.http.post<any>(environment.baseUrl+'/authentification', infoUtilisateur);
   }
   getToken(){
     return this.storageService.getData('token');

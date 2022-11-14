@@ -18,11 +18,12 @@
             <form [formGroup]="operationForm" (ngSubmit)="onFormSubmitOperation()">
               <mat-form-field appearance="fill">
                 <mat-label>Numéro de compte</mat-label>
-                <mat-select>
-                  <mat-option value="one">First option</mat-option>
-                  <mat-option value="two">Second option</mat-option>
+                <mat-select formControlName="accountBankId">
+                  <mat-option *ngFor="let accountBankId of accountBankIds" value="{{accountBankId}}">{{accountBankId}}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><ul>
+                <li class="text_error" *ngFor="let errorAccountBankId of listErrorAccountBankId">{{errorAccountBankId}}</li>
+            </ul>  
                 <div class="form-group">
                     <label>Somme</label>
                     <input  formControlName="somme"  type="number" name="somme" id="somme" class="form-control" [ngClass]="listErrorSomme.length > 0 ? 'champ_invalide' :''">
@@ -32,11 +33,13 @@
                 </div>
                 <mat-form-field appearance="fill">
                   <mat-label>Type d'opération</mat-label>
-                  <mat-select>
-                    <mat-option value="one">Retirer</mat-option>
-                    <mat-option value="two">Déposer</mat-option>
+                  <mat-select  formControlName="typeOperation">
+                    <mat-option value="retirer">Retirer</mat-option>
+                    <mat-option value="deposer">Déposer</mat-option>
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field><ul>
+                  <li class="text_error" *ngFor="let errorTypeOperation of listErrorTypeOperation">{{errorTypeOperation}}</li>
+              </ul>  
                 <br>
                 <button mat-raised-button color="primary" class="mat-button-left">Effectuer l'opération</button>              
                 <button mat-raised-button color="accent" class="mat-button-left" (click)="toHome()">Annuler</button>

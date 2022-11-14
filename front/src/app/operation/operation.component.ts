@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
 
@@ -11,28 +12,45 @@ import { StorageService } from '../services/storage.service';
 })
 export class OperationComponent implements OnInit {
   public operationForm!: FormGroup;
+  accountBankIds?: number[];
   constructor(private formBuilder: FormBuilder, private storageService:StorageService,private apiService: ApiService, private router: Router) { }
   ngOnInit(): void {
-    if(this.router.getCurrentNavigation()!=null && this.router.getCurrentNavigation()!=undefined) {
-      console.log(this.router.getCurrentNavigation()?.extras);
+    this.accountBankIds = this.storageService.getaccountBankIds();
+    console.log(this.accountBankIds);
+    if(this.accountBankIds==null || this.accountBankIds==undefined|| this.accountBankIds.length==0) {
+      this.recupAccountBankAll();
     }
     this.operationForm = this.formBuilder.group({
+      accountBankId: ['', [Validators.required]],
       somme: ['', [Validators.required]],
+      typeOperation: ['', [Validators.required]],
     });
   }
+  listErrorAccountBankId: String[]= [];
   listErrorSomme: String[]= [];
-  listErrorDecouvert: String[]= [];
+  listErrorTypeOperation: String[]= [];
   toHome(){
     this.router.navigate(['/welcome']);
   }
   
   onFormSubmitOperation() {
     this.listErrorSomme = [];
-    if(!this.isInvalidAndDirty('solde') && this.operationForm.get('solde')?.value!="") {
+    if(this.operationForm.get('accountBankId')?.valid ||
+    !this.isInvalidAndDirty('somme') && this.operationForm.get('somme')?.value!="" ||
+    this.operationForm.get('typeOperation')?.value !== "") {
       this.envoieDonnee();
     } else {
-      this.listErrorSomme = this.controleChamp(this.operationForm.get('solde')?.value); 
+      this.listErrorAccountBankId = this.controleChampInput('accountBankId'); 
+      this.listErrorSomme = this.controleChamp(this.operationForm.get('somme')?.value); 
+      this.listErrorTypeOperation = this.controleChampInput('typeOperation');  
     }
+  }
+  controleChampInput(champ: string) :  String[]{
+    var listError:String[] = [];
+    if(!this.operationForm.get(champ)?.valid) {
+      listError.push("le champs n'est pas remplit");
+    }
+    return listError;
   }
   controleChamp(champ: string) :  String[]{
     var listError:String[] = [];
@@ -50,6 +68,7 @@ export class OperationComponent implements OnInit {
     return ctrl !== null && !ctrl.valid && ctrl.dirty && isNaN(Number(field));
   }
   envoieDonnee() {
+    console.log('test');
    /* var accountBankRequestDTO = new AccountBankRequestDTO(this.operationForm.get('solde')?.value,this.operationForm.get('decouvert')?.value);
     this.apiService.createAccountBank(accountBankRequestDTO).subscribe({
       next: (response) => {
@@ -63,6 +82,22 @@ export class OperationComponent implements OnInit {
 
   }
   
+
+  recupAccountBankAll() {
+    this.accountBankIds=[];
+    this.apiService.getAccountBankAll().subscribe({
+      next: (accountBanks: AccountBankResponseDTO[]) => {
+        accountBanks.forEach(accountBank => {
+          if( accountBank!=null && accountBank.id!=null && this.accountBankIds!=null) {
+            this.accountBankIds.push(accountBank.id);
+          }          
+        });
+    },
+    error: (error) => {
+      alert(error.error);
+    }
+  });
+    }
   deconnection() {
     this.storageService.clearData();
     this.router.navigate(['/']);
