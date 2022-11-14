@@ -17,7 +17,11 @@ export class HistoriqueComponent implements OnInit {
   operationLightDTO :OperationLightDTO[] =[];
   accountBankId:number | undefined;
   ngOnInit(): void {
-    this.recupHisto();
+    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
+      this.deconnection();
+    } else {
+      this.recupHisto();
+    }
   }
   recupHisto() {
     this.accountBankId = this.storageService.getaccountBankId();

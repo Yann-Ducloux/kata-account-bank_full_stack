@@ -15,8 +15,12 @@ export class WelcomeComponent implements OnInit {
   constructor( private router: Router, private storageService:StorageService,  private apiService: ApiService,) { }
   accountBankResponse :AccountBankResponseDTO[] =[];
   ngOnInit(): void {
-    this.storageService.removeData('accountBankId');
-    this.recupAccountBankAll();
+    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
+      this.deconnection();
+    } else {
+      this.storageService.removeData('accountBankId');
+      this.recupAccountBankAll();
+    }
   }
 
   recupAccountBankAll() {

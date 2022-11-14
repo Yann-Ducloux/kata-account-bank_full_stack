@@ -1,11 +1,11 @@
 <mat-card>
   <div class="button-container" >
-    <button mat-fab color="primary" aria-label="icon" (click)="deconnection()">
+    <button mat-fab color="primary" aria-label="icon" (click)="deconnection()" class="mat-button-left">
         <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
     </button>
   </div>
     <div class="container">
-        <p>Acceuil</p>
+        <h1>Accueil</h1>
     </div>
 </mat-card>
 <br>
@@ -24,25 +24,25 @@
 <table mat-table [dataSource]="accountBankResponse" class="mat-elevation-z8 account-table">
     <!-- Numéro Column -->
     <ng-container matColumnDef="numero">
-      <th mat-header-cell *matHeaderCellDef>Numéro de compte</th>
+      <th mat-header-cell *matHeaderCellDef><h3>Numéro de compte</h3></th>
       <td mat-cell *matCellDef="let element">{{element.id}}</td>
     </ng-container>
   
     <!-- solde Column -->
     <ng-container matColumnDef="solde">
-      <th mat-header-cell *matHeaderCellDef>Solde</th>
+      <th mat-header-cell *matHeaderCellDef><h3>Solde</h3></th>
       <td mat-cell *matCellDef="let element">{{element.solde}}</td>
     </ng-container>
   
     <!-- découvert Column -->
     <ng-container matColumnDef="decouvert">
-      <th mat-header-cell *matHeaderCellDef>Découvert autorisé</th>
+      <th mat-header-cell *matHeaderCellDef><h3>Découvert autorisé</h3></th>
       <td mat-cell *matCellDef="let element">{{element.decouvert}}</td>
     </ng-container>
   
     <!-- date Column -->
     <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <th mat-header-cell *matHeaderCellDef><h3>Date</h3></th>
       <td mat-cell *matCellDef="let element">{{element.dateCreation | date: 'dd/MM/YYYY' }}</td>
     </ng-container>
   

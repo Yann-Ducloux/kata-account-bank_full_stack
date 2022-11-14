@@ -17,15 +17,19 @@ export class OperationComponent implements OnInit {
   accountBankIds?: number[];
   constructor(private formBuilder: FormBuilder, private storageService:StorageService,private apiService: ApiService, private router: Router) { }
   ngOnInit(): void {
-    this.accountBankIds = this.storageService.getaccountBankIds();
-    if(this.accountBankIds==null || this.accountBankIds==undefined|| this.accountBankIds.length==0) {
-      this.recupAccountBankAll();
+    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
+      this.deconnection();
+    } else {
+      this.accountBankIds = this.storageService.getaccountBankIds();
+      if(this.accountBankIds==null || this.accountBankIds==undefined|| this.accountBankIds.length==0) {
+        this.recupAccountBankAll();
+      }
+      this.operationForm = this.formBuilder.group({
+        accountBankId: ['', [Validators.required]],
+        somme: ['', [Validators.required]],
+        typeOperation: ['', [Validators.required]],
+      });
     }
-    this.operationForm = this.formBuilder.group({
-      accountBankId: ['', [Validators.required]],
-      somme: ['', [Validators.required]],
-      typeOperation: ['', [Validators.required]],
-    });
   }
   listErrorAccountBankId: String[]= [];
   listErrorSomme: String[]= [];

@@ -15,10 +15,14 @@ export class AccountBankComponent implements OnInit {
   public accountBankForm!: FormGroup;
   constructor(private formBuilder: FormBuilder, private storageService:StorageService,private apiService: ApiService, private router: Router) { }
   ngOnInit(): void {
-    this.accountBankForm = this.formBuilder.group({
-      solde: ['', [Validators.required]],
-      decouvert: ['', [Validators.required]],
-    });
+    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
+      this.deconnection();
+    } else {
+      this.accountBankForm = this.formBuilder.group({
+        solde: ['', [Validators.required]],
+        decouvert: ['', [Validators.required]],
+      });
+    }
   }
   listErrorSolde: String[]= [];
   listErrorDecouvert: String[]= [];

@@ -8,12 +8,11 @@
       </button>
     </div>
     <div class="container">    
-
-        <p>Création de compte banquaire</p>
+        <h1>Création de compte banquaire</h1>
     </div>
 </mat-card>
 <br>
-<div class="container"><mat-card>
+<div class="container" ><mat-card>
     <div class="row">
         <div class="col-md-8">
             <form [formGroup]="accountBankForm" (ngSubmit)="onFormSubmitAccountBank()">
@@ -28,7 +27,7 @@
                     <label>Découvert</label>
                     <input  formControlName="decouvert"  type="number" name="decouvert" id="decouvert" class="form-control"  [ngClass]="listErrorDecouvert.length > 0 ? 'champ_invalide' :''">
                     <ul>
-                        <li class="text_error"*ngFor="let errorDecouvert of listErrorDecouvert">{{errorDecouvert}}</li>
+                        <li class="text_error" *ngFor="let errorDecouvert of listErrorDecouvert">{{errorDecouvert}}</li>
                     </ul>
                 </div>
                 <br>
