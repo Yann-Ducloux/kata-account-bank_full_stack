@@ -28,9 +28,9 @@ export class AccountBankComponent implements OnInit {
   
   onFormSubmitAccountBank() {
     this.listErrorSolde = [];
-    this.listErrorDecouvert = [];    
-    if(!this.isInvalidAndDirty('solde') && this.controleChamp('solde')
-    && !this.isInvalidAndDirty('decouvert') && this.controleChamp('decouvert')) {
+    this.listErrorDecouvert = [];   
+    if(!this.isInvalidAndDirty('solde') && this.controleChamp(this.accountBankForm.get('solde')?.value)
+    && !this.isInvalidAndDirty('decouvert') && this.controleChamp(this.accountBankForm.get('decouvert')?.value)) {
       this.envoieDonnee();
     } else {
       this.listErrorSolde = this.recupMessageError(this.accountBankForm.get('solde')?.value); 

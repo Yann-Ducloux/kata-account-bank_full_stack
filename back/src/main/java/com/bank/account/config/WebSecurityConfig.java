@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				antMatchers("/authentification").permitAll().
 				antMatchers("/account_bank", "/account_bank/*").permitAll().
 				antMatchers("/historique", "/historique/*").permitAll().
+				antMatchers("/operation", "/operation/*").permitAll().
 				antMatchers("/h2-console/**").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().

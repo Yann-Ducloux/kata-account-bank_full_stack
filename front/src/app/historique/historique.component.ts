@@ -25,15 +25,14 @@ export class HistoriqueComponent implements OnInit {
       this.apiService.getHistorique(this.accountBankId).subscribe({
         next: (response) => {
           this.historique = response;
-          console.log(this.historique);
-          console.log(this.historique.operationLightDTO);
           this.operationLightDTO = response.operationLightDTO
-          console.log(this.operationLightDTO);
         },
         error: (error) => {
           alert(error.error);
         }
       });
+    } else { 
+      this.toHome();
     }
   }
   toHome(){

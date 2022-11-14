@@ -3,12 +3,14 @@ import { ErrorHandler, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AccountBankRequestDTO } from 'src/interface/accountBankRequestDTO';
+import { OperationRequestDTO } from 'src/interface/operationRequestDTO';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ClientDTO } from 'src/interface/clientDTO';
 import { ClientFullDTO } from 'src/interface/clientFullDTO';
 import { HistoriqueOperationDTO } from 'src/interface/historiqueOperationDTO';
 import { InfoUtilisateur } from 'src/interface/infoUtilisateur';
 import { StorageService } from './storage.service';
+import { RecuResponseDTO } from 'src/interface/recuResponseDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +54,17 @@ export class ApiService {
       });
     const requestOptions = { headers: headers };  
     return this.http.get<AccountBankResponseDTO[]>(environment.baseUrl+'/account_bank/find', requestOptions);
+  }
+  
+  nouvelleOperation(operationRequestDTO: OperationRequestDTO): Observable<RecuResponseDTO> 
+  {
+    let auth_token = this.getToken();    
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+ auth_token,
+      });
+    const requestOptions = { headers: headers };  
+    return this.http.post<RecuResponseDTO>(environment.baseUrl+'/operation/', operationRequestDTO, requestOptions);
   }
 
   authentification(infoUtilisateur: InfoUtilisateur): Observable<any> {

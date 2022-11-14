@@ -71,7 +71,6 @@ export class AuthentificationComponent implements OnInit {
   envoieDonnee() {
     var infoUtilisateur = new InfoUtilisateur(this.authentificationForm.get('email')?.value, 
     this.authentificationForm.get('password')?.value);
-  console.log(infoUtilisateur);
   this.apiService.authentification(infoUtilisateur).subscribe({
       next: (response) => {
         this.storageService.saveData('token', response.token);

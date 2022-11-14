@@ -34,8 +34,8 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Type d'opération</mat-label>
                   <mat-select  formControlName="typeOperation">
-                    <mat-option value="retirer">Retirer</mat-option>
-                    <mat-option value="deposer">Déposer</mat-option>
+                    <mat-option value="DEPOSIT">Déposer</mat-option>
+                    <mat-option value="WITHDRAWAL">Retirer</mat-option>
                   </mat-select>
                 </mat-form-field><ul>
                   <li class="text_error" *ngFor="let errorTypeOperation of listErrorTypeOperation">{{errorTypeOperation}}</li>

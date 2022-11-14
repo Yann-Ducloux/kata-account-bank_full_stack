@@ -32,19 +32,27 @@ export class CreateClientComponent implements OnInit {
     this.listErrorNom = [];
     this.listErrorPrenom = [];
     this.listErrorPassword = [];
-    if(!this.isInvalidAndDirty('email') && this.userForm.get('email')?.value!=""
-    && !this.isInvalidAndDirty('nom') && this.userForm.get('nom')?.value!=""
-    && !this.isInvalidAndDirty('prenom') && this.userForm.get('prenom')?.value!=""
-    && !this.isInvalidAndDirty('password') && this.userForm.get('password')?.value!="") {
+    if(!this.isInvalidAndDirty('email') &&  this.controleChampMail()
+    && !this.isInvalidAndDirty('nom') && this.controleChamp(this.userForm.get('nom')?.value, 2)
+    && !this.isInvalidAndDirty('prenom') && this.controleChamp(this.userForm.get('prenom')?.value, 2)
+    && !this.isInvalidAndDirty('password') && this.controleChamp(this.userForm.get('password')?.value, 6)) {
       this.envoieDonnee();
     } else {
-      this.listErrorMail = this.controleChampMail(); 
-      this.listErrorNom = this.controleChamp(this.userForm.get('nom')?.value, 2);
-      this.listErrorPrenom = this.controleChamp(this.userForm.get('prenom')?.value, 2);
-      this.listErrorPassword = this.controleChamp(this.userForm.get('password')?.value, 6);
+      this.listErrorMail = this.recupMailMessageError(); 
+      this.listErrorNom = this.recupChampMessageError(this.userForm.get('nom')?.value, 2);
+      this.listErrorPrenom = this.recupChampMessageError(this.userForm.get('prenom')?.value, 2);
+      this.listErrorPassword = this.recupChampMessageError(this.userForm.get('password')?.value, 6);
     }
   }
-  controleChampMail() : String[]{
+  controleChampMail() : boolean{
+    var mail:String = this.userForm.get('email')?.value;
+    return (this.userForm.get('email')?.value != "" &&
+     !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
+  }
+  controleChamp(champ: string, minLength:number) :  boolean{
+    return (champ !=null && champ != "" && champ.length>=minLength && champ.length<=30);
+  }
+  recupMailMessageError() : String[]{
     var listError:String[] = [];
     if(this.userForm.get('email')?.value == "") {
       listError.push("le champs n'est pas remplit");
@@ -59,7 +67,7 @@ export class CreateClientComponent implements OnInit {
     }
     return listError;
   }
-  controleChamp(champ: string, minLength:number) :  String[]{
+  recupChampMessageError(champ: string, minLength:number) :  String[]{
     var listError:String[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");
@@ -74,7 +82,6 @@ export class CreateClientComponent implements OnInit {
     this.userForm.get('nom')?.value,
     this.userForm.get('prenom')?.value,
     this.userForm.get('password')?.value);
-  console.log(client);
   this.apiService.createClient(client).subscribe({
       next: (response) => {
       alert("compte créer");
