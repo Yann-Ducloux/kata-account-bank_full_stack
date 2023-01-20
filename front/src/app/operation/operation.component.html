@@ -1,50 +1,54 @@
-<mat-card>     
-  <div class="button-container" >
+<mat-card>
+  <div class="button-container">
     <button mat-fab color="primary" aria-label="icon" (click)="toHome()" class="mat-button-left">
-        <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
     </button>
     <button mat-fab color="primary" aria-label="icon" (click)="deconnection()" class="mat-button-left">
-        <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="exit_to_app"></mat-icon>
     </button>
   </div>
-    <div class="container">
-        <h1>Opération</h1>
-    </div>
+  <div class="container">
+    <h1>Opération</h1>
+  </div>
 </mat-card>
 <br>
 <div class="container"><mat-card>
     <div class="row">
-        <div class="col-md-8">
-            <form [formGroup]="operationForm" (ngSubmit)="onFormSubmitOperation()">
-              <mat-form-field appearance="fill">
-                <mat-label>Numéro de compte</mat-label>
-                <mat-select formControlName="accountBankId">
-                  <mat-option *ngFor="let accountBankId of accountBankIds" value="{{accountBankId}}">{{accountBankId}}</mat-option>
-                </mat-select>
-              </mat-form-field><ul>
-                <li class="text_error" *ngFor="let errorAccountBankId of listErrorAccountBankId">{{errorAccountBankId}}</li>
-            </ul>  
-                <div class="form-group">
-                    <label>Somme</label>
-                    <input  formControlName="somme"  type="number" name="somme" id="somme" class="form-control" [ngClass]="listErrorSomme.length > 0 ? 'champ_invalide' :''">
-                    <ul>
-                        <li class="text_error" *ngFor="let errorSomme of listErrorSomme">{{errorSomme}}</li>
-                    </ul>             
-                </div>
-                <mat-form-field appearance="fill">
-                  <mat-label>Type d'opération</mat-label>
-                  <mat-select  formControlName="typeOperation">
-                    <mat-option value="DEPOSIT">Déposer</mat-option>
-                    <mat-option value="WITHDRAWAL">Retirer</mat-option>
-                  </mat-select>
-                </mat-form-field><ul>
-                  <li class="text_error" *ngFor="let errorTypeOperation of listErrorTypeOperation">{{errorTypeOperation}}</li>
-              </ul>  
-                <br>
-                <button mat-raised-button color="primary" class="mat-button-left">Effectuer l'opération</button>              
-                <button mat-raised-button color="accent" class="mat-button-left" (click)="toHome()">Annuler</button>
-            </form>
-        </div>
+      <div class="col-md-8">
+        <form [formGroup]="operationForm" (ngSubmit)="onFormSubmitOperation()">
+          <mat-form-field appearance="fill">
+            <mat-label>Numéro de compte</mat-label>
+            <mat-select formControlName="accountBankId">
+              <mat-option *ngFor="let accountBankId of accountBankIds"
+                value="{{accountBankId}}">{{accountBankId}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ul>
+            <li class="text_error" *ngFor="let errorAccountBankId of listErrorAccountBankId">{{errorAccountBankId}}</li>
+          </ul>
+          <div class="form-group">
+            <label>Somme</label>
+            <input formControlName="somme" type="number" name="somme" id="somme" class="form-control"
+              [ngClass]="listErrorSomme.length > 0 ? 'champ_invalide' :''">
+            <ul>
+              <li class="text_error" *ngFor="let errorSomme of listErrorSomme">{{errorSomme}}</li>
+            </ul>
+          </div>
+          <mat-form-field appearance="fill">
+            <mat-label>Type d'opération</mat-label>
+            <mat-select formControlName="typeOperation">
+              <mat-option value="DEPOSIT">Déposer</mat-option>
+              <mat-option value="WITHDRAWAL">Retirer</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ul>
+            <li class="text_error" *ngFor="let errorTypeOperation of listErrorTypeOperation">{{errorTypeOperation}}</li>
+          </ul>
+          <br>
+          <button mat-raised-button color="primary" class="mat-button-left">Effectuer l'opération</button>
+          <button mat-raised-button color="accent" class="mat-button-left" (click)="toHome()">Annuler</button>
+        </form>
+      </div>
     </div>
   </mat-card>
-  </div>
+</div>

@@ -1,51 +1,56 @@
 <mat-card>
-        
+
     <div class="button-container" (click)="toHome()">
-      <button mat-fab color="primary" aria-label="icon">
-          <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home" ></mat-icon>
-      </button>
+        <button mat-fab color="primary" aria-label="icon">
+            <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
+        </button>
     </div>
-    <div class="container">    
+    <div class="container">
         <h1>Création de compte</h1>
     </div>
 </mat-card>
 <br>
 <div class="container"><mat-card>
-    <div class="row">
-        <div class="col-md-8">
-            <form [formGroup]="userForm" (ngSubmit)="onFormSubmitUser()">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input  formControlName="email"  type="text" name="email" id="email" class="form-control" [ngClass]="listErrorMail.length > 0 ? 'champ_invalide' :''">
-                    <ul>
-                        <li class="text_error" *ngFor="let errorMail of listErrorMail">{{errorMail}}</li>
-                    </ul>             
-                </div>
-                <div class="form-group">
-                    <label>Nom</label>
-                    <input  formControlName="nom"  type="text" name="nom" id="nom" class="form-control"  [ngClass]="listErrorNom.length > 0 ? 'champ_invalide' :''">
-                    <ul>
-                        <li class="text_error"*ngFor="let errorNom of listErrorNom">{{errorNom}}</li>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <label>Prenom</label>
-                    <input  formControlName="prenom"  type="text" name="prenom" id="prenom" class="form-control"  [ngClass]="listErrorPrenom.length > 0 ? 'champ_invalide' :''">
-                    <ul>
-                        <li class="text_error" *ngFor="let errorPrenom of listErrorPrenom">{{errorPrenom}}</li>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <label>Mot de passe</label>
-                    <input formControlName="password"  type="password" name="password" id="password" class="form-control"  [ngClass]="listErrorPassword.length > 0 ? 'champ_invalide' :''">
-                    <ul>
-                        <li class="text_error" *ngFor="let errorPassword of listErrorPassword">{{errorPassword}}</li>
-                    </ul>
-                </div>
-                <br>
-                <button mat-raised-button color="primary">envoie</button>
-            </form>
+        <div class="row">
+            <div class="col-md-8">
+                <form [formGroup]="userForm" (ngSubmit)="onFormSubmitUser()">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input formControlName="email" type="text" name="email" id="email" class="form-control"
+                            [ngClass]="listErrorMail.length > 0 ? 'champ_invalide' :''">
+                        <ul>
+                            <li class="text_error" *ngFor="let errorMail of listErrorMail">{{errorMail}}</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input formControlName="nom" type="text" name="nom" id="nom" class="form-control"
+                            [ngClass]="listErrorNom.length > 0 ? 'champ_invalide' :''">
+                        <ul>
+                            <li class="text_error" *ngFor="let errorNom of listErrorNom">{{errorNom}}</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label>Prenom</label>
+                        <input formControlName="prenom" type="text" name="prenom" id="prenom" class="form-control"
+                            [ngClass]="listErrorPrenom.length > 0 ? 'champ_invalide' :''">
+                        <ul>
+                            <li class="text_error" *ngFor="let errorPrenom of listErrorPrenom">{{errorPrenom}}</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input formControlName="password" type="password" name="password" id="password"
+                            class="form-control" [ngClass]="listErrorPassword.length > 0 ? 'champ_invalide' :''">
+                        <ul>
+                            <li class="text_error" *ngFor="let errorPassword of listErrorPassword">{{errorPassword}}
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    <button mat-raised-button color="primary">envoie</button>
+                </form>
+            </div>
         </div>
-    </div>
-</mat-card>
+    </mat-card>
 </div>

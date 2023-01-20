@@ -1,18 +1,21 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { OperationComponent } from './operation.component';
 
-import { HistoriqueComponent } from './historique.component';
 
-describe('HistoriqueComponent', () => {
-  let component: HistoriqueComponent;
-  let fixture: ComponentFixture<HistoriqueComponent>;
+describe('OperationComponent', () => {
+  let component: OperationComponent;
+  let fixture: ComponentFixture<OperationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HistoriqueComponent ]
+      imports: [ReactiveFormsModule, HttpClientModule],
+      declarations: [ OperationComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HistoriqueComponent);
+    fixture = TestBed.createComponent(OperationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

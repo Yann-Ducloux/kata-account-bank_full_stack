@@ -44,14 +44,17 @@ export class CreateClientComponent implements OnInit {
       this.listErrorPassword = this.recupChampMessageError(this.userForm.get('password')?.value, 6);
     }
   }
+
   controleChampMail() : boolean{
     var mail:String = this.userForm.get('email')?.value;
     return (this.userForm.get('email')?.value != "" &&
      !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
   }
+
   controleChamp(champ: string, minLength:number) :  boolean{
     return (champ !=null && champ != "" && champ.length>=minLength && champ.length<=30);
   }
+
   recupMailMessageError() : String[]{
     var listError:String[] = [];
     if(this.userForm.get('email')?.value == "") {
@@ -92,17 +95,21 @@ export class CreateClientComponent implements OnInit {
     }
   });
   }
+
   isInvalidAndDirty(field: string): boolean {
     const ctrl = this.userForm.get(field);
     return ctrl !== null && !ctrl.valid && ctrl.dirty;
   }
+
   verifyChamp(field: string, error: string): boolean {
     const ctrl = this.userForm.get(field);    
     return ctrl !== null && ctrl.dirty && ctrl.hasError(error);
   }
+
   resetUserForm(userForm:NgForm) {
     userForm.resetForm();
   }
+  
   toHome(){
     this.router.navigate(['/']);
   }
