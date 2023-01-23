@@ -17,7 +17,7 @@ export class CreateClientComponent implements OnInit {
       email: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30), Validators.pattern(this.emailRegex)]],
       nom: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       prenom: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      password: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
     });
   }
   listErrorMail: String[]= [];
@@ -32,6 +32,9 @@ export class CreateClientComponent implements OnInit {
     this.listErrorNom = [];
     this.listErrorPrenom = [];
     this.listErrorPassword = [];
+    console.log(this.controleChampMail());
+    console.log(this.verifyChamp('email', 'pattern'));
+    console.log("--------------------------------------");
     if(!this.isInvalidAndDirty('email') &&  this.controleChampMail()
     && !this.isInvalidAndDirty('nom') && this.controleChamp(this.userForm.get('nom')?.value, 2)
     && !this.isInvalidAndDirty('prenom') && this.controleChamp(this.userForm.get('prenom')?.value, 2)
@@ -45,7 +48,7 @@ export class CreateClientComponent implements OnInit {
     }
   }
 
-  controleChampMail() : boolean{
+  controleChampMail() : boolean {
     var mail:String = this.userForm.get('email')?.value;
     return (this.userForm.get('email')?.value != "" &&
      !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
@@ -105,7 +108,7 @@ export class CreateClientComponent implements OnInit {
     const ctrl = this.userForm.get(field);    
     return ctrl !== null && ctrl.dirty && ctrl.hasError(error);
   }
-
+  
   resetUserForm(userForm:NgForm) {
     userForm.resetForm();
   }
