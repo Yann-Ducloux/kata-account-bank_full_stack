@@ -1,7 +1,8 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable, of, throwError } from 'rxjs';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
@@ -75,8 +76,40 @@ describe('WelcomeComponent', () => {
   it('should controle ngOntinit deconnection', waitForAsync(()=>{  
     const component = fixture.componentInstance;    
     const navigateSpy = spyOn(router, 'navigate');
+    storageService.saveData('token', "");
     component.ngOnInit();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
     expect(storageService.getData('token')).toEqual(null);
+  }));
+
+  
+  it('should controle ngOntinit', waitForAsync(()=>{  
+    const component = fixture.componentInstance;    
+    storageService.saveData('token', "test_token");
+    let accountBankResponseDTO : AccountBankResponseDTO = new AccountBankResponseDTO(2339,232323);
+    accountBankResponseDTO.id = 3
+    let accountBankResponses :AccountBankResponseDTO[] =[accountBankResponseDTO];
+    let observableAccountBankResponseDTOs : Observable<AccountBankResponseDTO[]> = of(accountBankResponses);
+    spyOn(apiService, "getAccountBankAll").and.returnValue(observableAccountBankResponseDTOs);
+    component.ngOnInit();
+    expect(component.accountBankResponse).toEqual(accountBankResponses);
+  }));
+
+  
+  it('should controle ngOntinit error', waitForAsync(()=>{  
+    const component = fixture.componentInstance;    
+    storageService.saveData('token', "test_token");
+    let accountBankResponseDTO : AccountBankResponseDTO = new AccountBankResponseDTO(2339,232323);
+    accountBankResponseDTO.id = 3
+    let messageError = "Erreur inconnue";
+    const errorResponse = new HttpErrorResponse({
+      error: messageError,
+      status: 400,
+      statusText: 'OK',
+    });  
+    spyOn(apiService, "getAccountBankAll").and.returnValue(throwError(() => errorResponse));
+    spyOn(window, "alert");
+    component.ngOnInit();
+    expect(window.alert).toHaveBeenCalledWith(messageError);
   }));
 });
