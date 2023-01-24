@@ -1,6 +1,15 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserModule, By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from '../app-routing.module';
 
 import { CreateClientComponent } from './create-client.component';
 
@@ -10,8 +19,22 @@ describe('CreateClientComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientModule],
-      declarations: [ CreateClientComponent ]
+      imports: [ReactiveFormsModule, HttpClientModule,
+      
+      
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatTableModule,
+    MatIconModule,
+    MatOptionModule,
+    MatSelectModule,],
+      declarations: [ CreateClientComponent ],
+      providers: [FormBuilder],
     })
     .compileComponents();
 
@@ -29,31 +52,27 @@ describe('CreateClientComponent', () => {
 
 
   it('should controle mail false', ()=>{
-    component.userForm.patchValue({
-      email: "ducloux",
+    fixture.detectChanges();
+    component.userForm.setValue({
+      email: "duclouxmail",
       nom: "Ducloux",
       prenom: "Yann",
       password: "password",
     });
-    console.log("controle mail false");
-    console.log(component.userForm.get('email')?.value);
-    fixture.detectChanges();
-    console.log(component.controleChampMail()); 
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
     expect(component.controleChampMail()).toBeFalse();
-    component.recupMailMessageError();
-    console.log(component.listErrorMail);
   });
 
   it('should controle mail true', ()=>{
-    component.userForm.patchValue({
+    component.userForm.setValue({
       email: "ducloux.y@gmail.com",
       nom: "Ducloux",
       prenom: "Yann",
       password: "password",
     });
-    console.log("controle mail true");
-    console.log(component.userForm.get('email')?.value);
-    console.log(component.controleChampMail());
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
     expect(component.controleChampMail()).toBeTrue();
   });
 
@@ -65,24 +84,19 @@ describe('CreateClientComponent', () => {
       prenom: "Yann",
       password: "password",
     });
-    component.recupMailMessageError();
-    console.log(component.listErrorMail);
-    expect(component.listErrorMail.length).toBe(0);
+    let listError = component.recupMailMessageError();
+    expect(listError.length).toBe(0);
   });
 
-  it('should controle mail no message', ()=>{
+  it('should controle mail message empty', ()=>{
     component.userForm.patchValue({
-      email: "duclouxgjgjhgjghghgjhjhjjhjjghgjkghjgk.y@gmail.com",
+      email: "",
       nom: "Ducloux",
       prenom: "Yann",
       password: "password",
     });
-    console.log("should controle mail no lenght");
-    console.log(component.userForm.get('email')?.value);
-    console.log(component.userForm.get('email')?.value.length);
-    component.recupMailMessageError();
-    console.log(component.listErrorMail);
-    expect(component.listErrorMail.length).toBe(1);
+    let listError = component.recupMailMessageError();
+    expect(listError.length).toBe(1);
   });
 
 });

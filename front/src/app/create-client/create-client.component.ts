@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClientFullDTO } from 'src/interface/clientFullDTO';
 import { ApiService } from '../services/api.service';
@@ -32,9 +32,6 @@ export class CreateClientComponent implements OnInit {
     this.listErrorNom = [];
     this.listErrorPrenom = [];
     this.listErrorPassword = [];
-    console.log(this.controleChampMail());
-    console.log(this.verifyChamp('email', 'pattern'));
-    console.log("--------------------------------------");
     if(!this.isInvalidAndDirty('email') &&  this.controleChampMail()
     && !this.isInvalidAndDirty('nom') && this.controleChamp(this.userForm.get('nom')?.value, 2)
     && !this.isInvalidAndDirty('prenom') && this.controleChamp(this.userForm.get('prenom')?.value, 2)
@@ -50,8 +47,7 @@ export class CreateClientComponent implements OnInit {
 
   controleChampMail() : boolean {
     var mail:String = this.userForm.get('email')?.value;
-    return (this.userForm.get('email')?.value != "" &&
-     !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
+    return (!this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
   }
 
   controleChamp(champ: string, minLength:number) :  boolean{
@@ -105,7 +101,7 @@ export class CreateClientComponent implements OnInit {
   }
 
   verifyChamp(field: string, error: string): boolean {
-    const ctrl = this.userForm.get(field);    
+    const ctrl = this.userForm.get(field);   
     return ctrl !== null && ctrl.dirty && ctrl.hasError(error);
   }
   
