@@ -24,15 +24,14 @@ export class WelcomeComponent implements OnInit {
   }
 
   recupAccountBankAll() {
-    
   this.apiService.getAccountBankAll().subscribe({
     next: (response) => {
       this.accountBankResponse = response;
   },
-  error: (error) => {
-    alert(error.error);
-  }
-});
+    error: (error) => {
+      alert(error.error);
+    }
+    });
   }
 
   goToAccountBank(){
@@ -50,6 +49,7 @@ export class WelcomeComponent implements OnInit {
       this.router.navigate(['/operation']);
     }
   }
+  
   goToHistorique(accountBankResponseDTO:AccountBankResponseDTO){
     if(accountBankResponseDTO!=null && accountBankResponseDTO.id!=null) {
       this.storageService.setaccountBankId(accountBankResponseDTO.id);
