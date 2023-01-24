@@ -58,7 +58,7 @@ describe('WelcomeComponent', () => {
     storageService.saveData('token', "test_token");
     component.deconnection();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
-    expect(storageService.getData('token')).toBe(null);
+    expect(storageService.getData('token')).toEqual(null);
   }));
 
   it('should controle navigate operation', waitForAsync(()=>{  
@@ -70,5 +70,13 @@ describe('WelcomeComponent', () => {
     component.goToOperation();
     expect(navigateSpy).toHaveBeenCalledWith(['/operation']);
     expect(storageService.getaccountBankIds()).toEqual([4]);
+  }));
+
+  it('should controle ngOntinit deconnection', waitForAsync(()=>{  
+    const component = fixture.componentInstance;    
+    const navigateSpy = spyOn(router, 'navigate');
+    component.ngOnInit();
+    expect(navigateSpy).toHaveBeenCalledWith(['/']);
+    expect(storageService.getData('token')).toEqual(null);
   }));
 });
