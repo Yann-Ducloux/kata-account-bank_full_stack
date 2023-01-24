@@ -16,7 +16,7 @@ describe('CreateClientComponent', () => {
   let apiService: ApiService;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientModule, RouterTestingModule.withRoutes([])],
+      imports: [ReactiveFormsModule, HttpClientModule],
       declarations: [ CreateClientComponent ],
     providers: [FormBuilder],
     })

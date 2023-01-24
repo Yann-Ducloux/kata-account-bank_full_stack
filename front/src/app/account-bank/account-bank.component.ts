@@ -70,8 +70,6 @@ export class AccountBankComponent implements OnInit {
       alert(error.error);
     }
   });
-
-
   }
   
   deconnection() {
