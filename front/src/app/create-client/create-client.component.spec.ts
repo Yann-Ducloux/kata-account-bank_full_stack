@@ -122,21 +122,21 @@ describe('CreateClientComponent', () => {
       prenom: "Yann",
       password: "password",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="nom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorNom.length).toBe(1);
     expect(component.listErrorNom[0]).toBe("le champs n'est pas remplit");
   });
 
-  it('should controle name message lenght', ()=>{
+  it('should controle nom message lenght', ()=>{
     component.userForm.patchValue({
       email: "ducloux.y@gmail.com",
       nom: "x",
       prenom: "Yann",
       password: "password",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="nom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorNom.length).toBe(1);
@@ -150,7 +150,7 @@ describe('CreateClientComponent', () => {
       prenom: "",
       password: "password",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="prenom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorPrenom.length).toBe(1);
@@ -164,7 +164,7 @@ describe('CreateClientComponent', () => {
       prenom: "y",
       password: "password",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="prenom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorPrenom.length).toBe(1);
@@ -178,7 +178,7 @@ describe('CreateClientComponent', () => {
       prenom: "Yann",
       password: "",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorPassword.length).toBe(1);
@@ -192,7 +192,7 @@ describe('CreateClientComponent', () => {
       prenom: "Yann",
       password: "passwdsflksjdfsdfsqfsdfsdfsqdfsdqfdsf",
     });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
     expect(component.listErrorPassword.length).toBe(1);
