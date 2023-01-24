@@ -39,24 +39,8 @@ describe('CreateClientComponent', () => {
     component.toHome();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
   }));
-
-  it('should controle envoie donnée', waitForAsync(()=>{  
-    const component = fixture.componentInstance;
-    component.userForm.patchValue({
-      email: "ducloux.y@gmail.com",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    const navigateSpy = spyOn(router, 'navigate');
-    let observableClientDTO : Observable<ClientDTO> = of(new ClientDTO("ducloux.y@gmail.com", "Ducloux", "Yann"));
-    spyOn(apiService, "createClient").and.returnValue(observableClientDTO);
-    component.envoieDonnee();
-    expect(navigateSpy).toHaveBeenCalledWith(['/authentification']);
-  }));
-
   
-  it('should controle submitUser Valid', waitForAsync(()=>{  
+  it('should controle create client Valid', waitForAsync(()=>{  
     const component = fixture.componentInstance;
     component.userForm.patchValue({
       email: "ducloux.y@gmail.com",
@@ -72,7 +56,7 @@ describe('CreateClientComponent', () => {
   }));
 
   
-  it('should controle submitUser InValid mail exist', waitForAsync(()=>{  
+  it('should controle create client InValid mail exist', waitForAsync(()=>{  
     const component = fixture.componentInstance;
     component.userForm.patchValue({
       email: "ducloux.y@gmail.com",
