@@ -81,8 +81,7 @@ describe('AuthentificationComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitAuthentification();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("Erreur pattern mail");
+    expect(component.listErrorMail).toEqual(["Erreur pattern mail"]);
   }));
 
   it('should controle mail message empty', ()=>{
@@ -93,8 +92,7 @@ describe('AuthentificationComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitAuthentification();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorMail).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle mail message lenght', ()=>{
@@ -105,8 +103,7 @@ describe('AuthentificationComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitAuthentification();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+    expect(component.listErrorMail).toEqual(["la taille du champs doit être compris entre 6 et 30"]);
   });
 
   it('should controle password message empty', ()=>{
@@ -117,8 +114,7 @@ describe('AuthentificationComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitAuthentification();
-    expect(component.listErrorPassword.length).toBe(1);
-    expect(component.listErrorPassword[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorPassword).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle password message lenght', ()=>{
@@ -129,7 +125,6 @@ describe('AuthentificationComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitAuthentification();
-    expect(component.listErrorPassword.length).toBe(1);
-    expect(component.listErrorPassword[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+    expect(component.listErrorPassword).toEqual(["la taille du champs doit être compris entre 6 et 30"]);
   });
 });

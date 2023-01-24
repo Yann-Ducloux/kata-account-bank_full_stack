@@ -87,8 +87,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("Erreur pattern mail");
+    expect(component.listErrorMail).toEqual(["Erreur pattern mail"]);
   }));
 
   it('should controle mail message empty', ()=>{
@@ -101,8 +100,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorMail).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle mail message lenght', ()=>{
@@ -115,8 +113,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorMail.length).toBe(1);
-    expect(component.listErrorMail[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+    expect(component.listErrorMail).toEqual(["la taille du champs doit être compris entre 6 et 30"]);
   });
 
   it('should controle nom message empty', ()=>{
@@ -129,8 +126,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="nom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorNom.length).toBe(1);
-    expect(component.listErrorNom[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorNom).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle nom message lenght', ()=>{
@@ -143,8 +139,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="nom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorNom.length).toBe(1);
-    expect(component.listErrorNom[0]).toBe("la taille du champs doit être compris entre 2 et 30");
+    expect(component.listErrorNom).toEqual(["la taille du champs doit être compris entre 2 et 30"]);
   });
 
   it('should controle prénom message empty', ()=>{
@@ -157,8 +152,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="prenom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorPrenom.length).toBe(1);
-    expect(component.listErrorPrenom[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorPrenom).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle prénom message lenght', ()=>{
@@ -171,8 +165,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="prenom"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorPrenom.length).toBe(1);
-    expect(component.listErrorPrenom[0]).toBe("la taille du champs doit être compris entre 2 et 30");
+    expect(component.listErrorPrenom).toEqual(["la taille du champs doit être compris entre 2 et 30"]);
   });
 
   it('should controle password message empty', ()=>{
@@ -185,8 +178,7 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorPassword.length).toBe(1);
-    expect(component.listErrorPassword[0]).toBe("le champs n'est pas remplit");
+    expect(component.listErrorPassword).toEqual(["le champs n'est pas remplit"]);
   });
 
   it('should controle password message lenght', ()=>{
@@ -199,7 +191,6 @@ describe('CreateClientComponent', () => {
     const inputElement = fixture.debugElement.query(By.css('input[name="password"]')).nativeElement;
     inputElement.dispatchEvent(new Event('input'));
     component.onFormSubmitUser();
-    expect(component.listErrorPassword.length).toBe(1);
-    expect(component.listErrorPassword[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+    expect(component.listErrorPassword).toEqual(["la taille du champs doit être compris entre 6 et 30"]);
   });
 });
