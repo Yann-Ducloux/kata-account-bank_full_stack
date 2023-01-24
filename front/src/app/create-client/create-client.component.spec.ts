@@ -32,88 +32,7 @@ describe('CreateClientComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should controle name', ()=>{
-    expect(component.controleChamp("yann", 5)).toBeFalse();
-  });
 
-
-  it('should controle mail false', ()=>{
-    fixture.detectChanges();
-    component.userForm.setValue({
-      email: "duclouxmail",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
-    inputElement.dispatchEvent(new Event('input'));
-    expect(component.controleChampMail()).toBeFalse();
-  });
-
-  it('should controle mail true', ()=>{
-    component.userForm.setValue({
-      email: "ducloux.y@gmail.com",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
-    inputElement.dispatchEvent(new Event('input'));
-    expect(component.controleChampMail()).toBeTrue();
-  });
-
-
-  it('should controle mail no message error', ()=>{
-    component.userForm.patchValue({
-      email: "ducloux.y@gmail.com",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    let listError = component.recupMailMessageError();
-    expect(listError.length).toBe(0);
-  });
-
-  it('should controle mail message empty', ()=>{
-    component.userForm.patchValue({
-      email: "",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    let listError:String[] = component.recupMailMessageError();
-    expect(listError.length).toBe(1);
-    expect(listError[0]).toBe("le champs n'est pas remplit");
-  });
-
-  it('should controle mail message lenght', ()=>{
-    component.userForm.patchValue({
-      email: "fdkjkjfdlkjdslkjflkjfdsk@gmail.com",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
-    inputElement.dispatchEvent(new Event('input'));
-    let listError:String[] = component.recupMailMessageError();
-    expect(listError.length).toBe(1);
-    expect(listError[0]).toBe("la taille du champs doit être compris entre 6 et 30");
-  });
-
-
-  it('should controle mail message pattern', ()=>{
-    component.userForm.patchValue({
-      email: "ducloux",
-      nom: "Ducloux",
-      prenom: "Yann",
-      password: "password",
-    });
-    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
-    inputElement.dispatchEvent(new Event('input'));
-    let listError:String[] = component.recupMailMessageError();
-    expect(listError.length).toBe(1);
-    expect(listError[0]).toBe("Erreur pattern mail");
-  });
 
   it('should controle navigate home', waitForAsync(()=>{  
     const component = fixture.componentInstance;
@@ -136,4 +55,147 @@ describe('CreateClientComponent', () => {
     component.envoieDonnee();
     expect(navigateSpy).toHaveBeenCalledWith(['/authentification']);
   }));
+
+  
+  it('should controle submitUser Valid', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    const navigateSpy = spyOn(router, 'navigate');
+    let observableClientDTO : Observable<ClientDTO> = of(new ClientDTO("ducloux.y@gmail.com", "Ducloux", "Yann"));
+    spyOn(apiService, "createClient").and.returnValue(observableClientDTO);
+    component.onFormSubmitUser();
+    expect(navigateSpy).toHaveBeenCalledWith(['/authentification']);
+  }));
+  
+  it('should controle mail meesage pattern', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.userForm.patchValue({
+      email: "ducloux",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorMail.length).toBe(1);
+    expect(component.listErrorMail[0]).toBe("Erreur pattern mail");
+  }));
+
+  it('should controle mail message empty', ()=>{
+    component.userForm.patchValue({
+      email: "",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorMail.length).toBe(1);
+    expect(component.listErrorMail[0]).toBe("le champs n'est pas remplit");
+  });
+
+  it('should controle mail message lenght', ()=>{
+    component.userForm.patchValue({
+      email: "fdkjkjfdlkjdslkjflkjfdsk@gmail.com",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorMail.length).toBe(1);
+    expect(component.listErrorMail[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+  });
+
+  it('should controle nom message empty', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "",
+      prenom: "Yann",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorNom.length).toBe(1);
+    expect(component.listErrorNom[0]).toBe("le champs n'est pas remplit");
+  });
+
+  it('should controle name message lenght', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "x",
+      prenom: "Yann",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorNom.length).toBe(1);
+    expect(component.listErrorNom[0]).toBe("la taille du champs doit être compris entre 2 et 30");
+  });
+
+  it('should controle prénom message empty', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "ducloux",
+      prenom: "",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorPrenom.length).toBe(1);
+    expect(component.listErrorPrenom[0]).toBe("le champs n'est pas remplit");
+  });
+
+  it('should controle prénom message lenght', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "ducloux",
+      prenom: "y",
+      password: "password",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorPrenom.length).toBe(1);
+    expect(component.listErrorPrenom[0]).toBe("la taille du champs doit être compris entre 2 et 30");
+  });
+
+  it('should controle password message empty', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "ducloux",
+      prenom: "Yann",
+      password: "",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorPassword.length).toBe(1);
+    expect(component.listErrorPassword[0]).toBe("le champs n'est pas remplit");
+  });
+
+  it('should controle password message lenght', ()=>{
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "ducloux",
+      prenom: "Yann",
+      password: "passwdsflksjdfsdfsqfsdfsdfsqdfsdqfdsf",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="email"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitUser();
+    expect(component.listErrorPassword.length).toBe(1);
+    expect(component.listErrorPassword[0]).toBe("la taille du champs doit être compris entre 6 et 30");
+  });
 });
