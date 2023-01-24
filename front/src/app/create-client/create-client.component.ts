@@ -84,11 +84,11 @@ export class CreateClientComponent implements OnInit {
     this.userForm.get('nom')?.value,
     this.userForm.get('prenom')?.value,
     this.userForm.get('password')?.value);
-  this.apiService.createClient(client).subscribe({
-      next: (response) => {
-      alert("compte créer");
-      this.router.navigate(['/authentification']);
-    },
+    this.apiService.createClient(client).subscribe({
+        next: (response) => {
+        alert("compte créer");
+        this.router.navigate(['/authentification']);
+      },
     error: (error) => {
       alert(error.error);
     }

@@ -1,18 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatOptionModule } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { BrowserModule, By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router, Routes } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppRoutingModule } from '../app-routing.module';
-
 import { CreateClientComponent } from './create-client.component';
 
 describe('CreateClientComponent', () => {
@@ -30,7 +21,7 @@ describe('CreateClientComponent', () => {
     fixture = TestBed.createComponent(CreateClientComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
