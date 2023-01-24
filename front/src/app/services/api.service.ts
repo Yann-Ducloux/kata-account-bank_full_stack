@@ -19,7 +19,7 @@ export class ApiService {
 
   constructor(private http: HttpClient, private errorhandler: ErrorHandler,
     private storageService: StorageService) { }
-  createClient(client: ClientFullDTO): Observable<any> {
+  createClient(client: ClientFullDTO): Observable<ClientDTO> {
     return this.http.post<ClientDTO>(environment.baseUrl+'/client', client);
   }
   

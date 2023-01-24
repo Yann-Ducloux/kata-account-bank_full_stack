@@ -4,12 +4,16 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Observable, of } from 'rxjs';
+import { ClientDTO } from 'src/interface/clientDTO';
+import { ApiService } from '../services/api.service';
 import { CreateClientComponent } from './create-client.component';
 
 describe('CreateClientComponent', () => {
   let component: CreateClientComponent;
   let fixture: ComponentFixture<CreateClientComponent>;
   let router: Router;
+  let apiService: ApiService;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule, RouterTestingModule.withRoutes([])],
@@ -22,6 +26,7 @@ describe('CreateClientComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     router = TestBed.inject(Router);
+    apiService = TestBed.inject(ApiService);
   });
 
   it('should create', () => {
@@ -110,11 +115,25 @@ describe('CreateClientComponent', () => {
     expect(listError[0]).toBe("Erreur pattern mail");
   });
 
-
   it('should controle navigate home', waitForAsync(()=>{  
     const component = fixture.componentInstance;
     const navigateSpy = spyOn(router, 'navigate');
     component.toHome();
     expect(navigateSpy).toHaveBeenCalledWith(['/']);
+  }));
+
+  it('should controle envoie donnée', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    const navigateSpy = spyOn(router, 'navigate');
+    let observableClientDTO : Observable<ClientDTO> = of(new ClientDTO("ducloux.y@gmail.com", "Ducloux", "Yann"));
+    spyOn(apiService, "createClient").and.returnValue(observableClientDTO);
+    component.envoieDonnee();
+    expect(navigateSpy).toHaveBeenCalledWith(['/authentification']);
   }));
 });
