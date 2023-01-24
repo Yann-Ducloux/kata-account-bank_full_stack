@@ -90,6 +90,10 @@ export class CreateClientComponent implements OnInit {
       this.router.navigate(['/authentification']);
     },
     error: (error) => {
+      console.log('++++++++++++++++++++++++++++++++++++++++++++');
+      console.log(error);
+      console.log(error.error);
+      console.log('++++++++++++++++++++++++++++++++++++++++++++');
       alert(error.error);
     }
   });

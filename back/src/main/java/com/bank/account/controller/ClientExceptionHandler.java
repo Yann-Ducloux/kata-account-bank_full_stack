@@ -17,7 +17,7 @@ public class ClientExceptionHandler {
     }
 
     @ExceptionHandler(value = { DataIncorrectException.class})
-    public ResponseEntity<Object> mailExistHandleError(DataIncorrectException ex) {
+    public ResponseEntity<Object> dataIncorrectError(DataIncorrectException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("un des données est incorrecte");
     }
 

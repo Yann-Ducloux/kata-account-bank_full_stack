@@ -1,10 +1,10 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { ClientDTO } from 'src/interface/clientDTO';
 import { ApiService } from '../services/api.service';
 import { CreateClientComponent } from './create-client.component';
@@ -70,6 +70,27 @@ describe('CreateClientComponent', () => {
     spyOn(apiService, "createClient").and.returnValue(observableClientDTO);
     component.onFormSubmitUser();
     expect(navigateSpy).toHaveBeenCalledWith(['/authentification']);
+  }));
+
+  
+  it('should controle submitUser InValid mail exist', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.userForm.patchValue({
+      email: "ducloux.y@gmail.com",
+      nom: "Ducloux",
+      prenom: "Yann",
+      password: "password",
+    });
+    let messageError = "le mail existe dèjà";
+    const errorResponse = new HttpErrorResponse({
+      error: messageError,
+      status: 400,
+      statusText: 'OK',
+   });
+    spyOn(apiService, "createClient").and.returnValue(throwError(() => errorResponse));
+    spyOn(window, "alert");
+    component.onFormSubmitUser();
+    expect(window.alert).toHaveBeenCalledWith(messageError);
   }));
   
   it('should controle mail meesage pattern', waitForAsync(()=>{  
