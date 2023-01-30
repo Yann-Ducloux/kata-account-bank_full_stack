@@ -18,16 +18,15 @@ export class OperationComponent implements OnInit {
   ngOnInit(): void {
     if (this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
       this.deconnection();
-    } else {
-      this.accountBankIds = this.storageService.getaccountBankIds();
-      if (this.accountBankIds == null || this.accountBankIds == undefined || this.accountBankIds.length == 0) {
-        this.recupAccountBankAll();
-      }
-      this.operationForm = this.formBuilder.group({
-        accountBankId: ['', [Validators.required]],
-        somme: ['', [Validators.required]],
-        typeOperation: ['', [Validators.required]],
-      });
+    }
+    this.operationForm = this.formBuilder.group({
+      accountBankId: ['', [Validators.required]],
+      somme: ['', [Validators.required]],
+      typeOperation: ['', [Validators.required]],
+    });
+    this.accountBankIds = this.storageService.getaccountBankIds();
+    if (this.accountBankIds == null || this.accountBankIds == undefined || this.accountBankIds.length == 0) {
+      this.recupAccountBankAll();
     }
   }
   listErrorAccountBankId: String[] = [];

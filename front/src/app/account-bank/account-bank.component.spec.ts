@@ -49,7 +49,6 @@ describe('AccountBankComponent', () => {
   it('should controle navigate home', waitForAsync(()=>{  
     const component = fixture.componentInstance;
     const navigateSpy = spyOn(router, 'navigate');
-    storageService.saveData('token', "test_token");
     component.ngOnInit();
     component.toHome();
     expect(navigateSpy).toHaveBeenCalledWith(['/welcome']);

@@ -19,9 +19,8 @@ export class HistoriqueComponent implements OnInit {
   ngOnInit(): void {
     if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
       this.deconnection();
-    } else {
-      this.recupHisto();
     }
+    this.recupHisto();
   }
   recupHisto() {
     this.accountBankId = this.storageService.getaccountBankId();
