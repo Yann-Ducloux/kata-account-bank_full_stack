@@ -1,7 +1,10 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
 
@@ -52,4 +55,67 @@ describe('AccountBankComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/welcome']);
   }));
 
+  it('should controle create account Bank Valid', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    let solde = 1000;
+    let decouvert= 128322;
+    component.accountBankForm.patchValue({
+      solde: solde,
+      decouvert: decouvert,
+    });
+    const navigateSpy = spyOn(router, 'navigate');
+    let observableAccountBankResponseDTO : Observable<AccountBankResponseDTO> = of(new AccountBankResponseDTO(solde, decouvert));
+    spyOn(apiService, "createAccountBank").and.returnValue(observableAccountBankResponseDTO);
+    component.onFormSubmitAccountBank();
+    expect(navigateSpy).toHaveBeenCalledWith(['/welcome']);
+  }));
+
+  it('should controle create account Bank negative solde', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.accountBankForm.patchValue({
+      solde: -1000,
+      decouvert: 128322,
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="solde"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitAccountBank();
+    expect(component.listErrorSolde).toEqual(["le minimum et 0 et le maximum est 1000000000"]);
+  }));
+
+  it('should controle create account Bank too heavy decouvert', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.accountBankForm.patchValue({
+      solde: 1000,
+      decouvert: 1000839000,
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="solde"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitAccountBank();
+    expect(component.listErrorDecouvert).toEqual(["le minimum et 0 et le maximum est 1000000000"]);
+  }));
+
+
+  it('should controle create account Bank solde empty', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.accountBankForm.patchValue({
+      solde: "",
+      decouvert: 100000,
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="solde"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitAccountBank();
+    expect(component.listErrorSolde).toEqual(["le champs n'est pas remplit"]);
+  }));
+
+  it('should controle create account Bank nan decouvert', waitForAsync(()=>{  
+    const component = fixture.componentInstance;
+    component.accountBankForm.patchValue({
+      solde: 1000,
+      decouvert: "djsqh",
+    });
+    const inputElement = fixture.debugElement.query(By.css('input[name="solde"]')).nativeElement;
+    inputElement.dispatchEvent(new Event('input'));
+    component.onFormSubmitAccountBank();
+    expect(component.listErrorDecouvert).toEqual(["le champ est incorrecte"]);
+  }));
 });
