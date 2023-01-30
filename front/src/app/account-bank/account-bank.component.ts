@@ -17,12 +17,11 @@ export class AccountBankComponent implements OnInit {
   ngOnInit(): void {
     if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
       this.deconnection();
-    } else {
-      this.accountBankForm = this.formBuilder.group({
-        solde: ['', [Validators.required]],
-        decouvert: ['', [Validators.required]],
-      });
-    }
+    } 
+    this.accountBankForm = this.formBuilder.group({
+      solde: ['', [Validators.required]],
+      decouvert: ['', [Validators.required]],
+    });
   }
   listErrorSolde: String[]= [];
   listErrorDecouvert: String[]= [];

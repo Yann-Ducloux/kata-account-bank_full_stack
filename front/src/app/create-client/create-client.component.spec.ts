@@ -17,7 +17,7 @@ describe('CreateClientComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule],
       declarations: [ CreateClientComponent ],
-    providers: [FormBuilder],
+      providers: [FormBuilder],
     })
     .compileComponents();
 

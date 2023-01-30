@@ -80,7 +80,8 @@ public class AuthentificationController {
 			connectionRequestDTO.setMail(mail);
 			connectionRequestDTO.setPassword(password);
 			if(this.authentificationService.connection(connectionRequestDTO)){
-				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(mail, password));
+				//TODO: pourquoi password fonctionne ?
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(mail, "password"));
 			}
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);

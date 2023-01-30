@@ -73,10 +73,14 @@ export class AuthentificationComponent implements OnInit {
     this.authentificationForm.get('password')?.value);
   this.apiService.authentification(infoUtilisateur).subscribe({
       next: (response) => {
+        console.log("response");
+        console.log(response);
         this.storageService.saveData('token', response.token);
         this.redirectionWelcome();
     },
     error: (error) => {
+      console.log("error");
+      console.log(error);
       alert(error.error);
     }
   });
