@@ -93,10 +93,7 @@ export class OperationComponent implements OnInit {
         alert(error.error);
       }
     });
-
-
   }
-
 
   recupAccountBankAll() {
     this.accountBankIds = [];
