@@ -157,7 +157,6 @@ describe('OperationComponent', () => {
     expect(component.listErrorTypeOperation).toEqual(["le champs n'est pas remplit"]);
   }));
 
-
   it('should controle create account Bank somme negative', waitForAsync(()=>{  
     const component = fixture.componentInstance;
     component.operationForm.patchValue({
