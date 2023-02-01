@@ -1,14 +1,12 @@
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { ComponentFixture, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
-import { OperationRequestDTO } from 'src/interface/operationRequestDTO';
 import { RecuResponseDTO } from 'src/interface/recuResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';

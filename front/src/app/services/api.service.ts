@@ -42,7 +42,7 @@ export class ApiService {
         'Authorization': 'Bearer '+ auth_token,
       });
     const requestOptions = { headers: headers };  
-    return this.http.get<HistoriqueOperationDTO[]>(environment.baseUrl+'/historique/'+accountBankId, requestOptions);
+    return this.http.get<HistoriqueOperationDTO>(environment.baseUrl+'/historique/'+accountBankId, requestOptions);
   }
   
   getAccountBankAll(): Observable<AccountBankResponseDTO[]> 

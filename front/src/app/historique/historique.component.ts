@@ -12,33 +12,37 @@ import { StorageService } from '../services/storage.service';
 })
 export class HistoriqueComponent implements OnInit {
   displayedColumns: string[] = ['somme', 'date'];
-  constructor(private apiService: ApiService, private storageService:StorageService, private router: Router) { }
+  constructor( private router: Router, private storageService:StorageService,  private apiService: ApiService,) { }
   historique !:HistoriqueOperationDTO;
   operationLightDTO :OperationLightDTO[] =[];
   accountBankId:number | undefined;
+  compteExist: boolean = false;
   ngOnInit(): void {
-    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined) {
+    if(this.apiService.getToken() == null || this.apiService.getToken() == undefined|| this.apiService.getToken() == "") {
       this.deconnection();
     }
     this.recupHisto();
   }
+  
   recupHisto() {
     this.accountBankId = this.storageService.getaccountBankId();
-    if(this.accountBankId!=null && this.accountBankId!= undefined){
+    this.compteExist = false;
+    if(!Number.isNaN(this.accountBankId) && this.accountBankId!=undefined){
       this.apiService.getHistorique(this.accountBankId).subscribe({
         next: (response) => {
           this.historique = response;
-          this.operationLightDTO = response.operationLightDTO
+          this.operationLightDTO = response.operationLightDTO;
+          this.compteExist = true;
         },
-        error: (error) => {
+        error: (error) => {        
           alert(error.error);
         }
       });
     } else { 
-      this.toHome();
+      alert("le compte n'est pas bon");
     }
   }
-  toHome(){
+  toHome() {
     this.router.navigate(['/welcome']);
   }
   deconnection() {

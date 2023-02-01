@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountBankRequestDTO } from 'src/interface/accountBankRequestDTO';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';

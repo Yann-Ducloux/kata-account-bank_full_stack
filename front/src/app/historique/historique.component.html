@@ -13,7 +13,7 @@
 </mat-card>
 <br>
 
-<div class="container"  *ngIf="historique !== undefined">
+<div class="container"  *ngIf="compteExist && historique !== undefined">
   <mat-card>
         <h1>Numéro de compte : {{historique.accountBankid}}</h1>
         <p>Solde : {{historique.solde}}</p>
@@ -23,7 +23,7 @@
 <br>
 
 
-<div class="container" *ngIf="historique!= undefined && historique.operationLightDTO !== undefined">
+<div class="container" *ngIf="compteExist && historique!= undefined && historique.operationLightDTO !== undefined">
 
   <table mat-table [dataSource]="historique.operationLightDTO" class="mat-elevation-z8 operation-table">
     <!-- Somme Column -->

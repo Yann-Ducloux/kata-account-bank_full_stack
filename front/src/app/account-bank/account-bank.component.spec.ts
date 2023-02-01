@@ -1,9 +1,9 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { AccountBankResponseDTO } from 'src/interface/accountBankResponseDTO';
 import { ApiService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
@@ -54,7 +54,14 @@ describe('AccountBankComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/welcome']);
   }));
 
-  it('should controle create account Bank Valid', waitForAsync(()=>{  
+  it('should controle create account Bank error inconnue', waitForAsync(()=>{  
+
+    let messageError = "erreur inconnue";
+    const errorResponse = new HttpErrorResponse({
+      error: messageError,
+      status: 400,
+      statusText: 'OK',
+   });
     const component = fixture.componentInstance;
     let solde = 1000;
     let decouvert= 128322;
@@ -62,12 +69,12 @@ describe('AccountBankComponent', () => {
       solde: solde,
       decouvert: decouvert,
     });
-    const navigateSpy = spyOn(router, 'navigate');
-    let observableAccountBankResponseDTO : Observable<AccountBankResponseDTO> = of(new AccountBankResponseDTO(solde, decouvert));
-    spyOn(apiService, "createAccountBank").and.returnValue(observableAccountBankResponseDTO);
+    spyOn(window, "alert");
+    spyOn(apiService, "createAccountBank").and.returnValue(throwError(() => errorResponse));
     component.onFormSubmitAccountBank();
-    expect(navigateSpy).toHaveBeenCalledWith(['/welcome']);
+    expect(window.alert).toHaveBeenCalledWith(messageError);
   }));
+
 
   it('should controle create account Bank negative solde', waitForAsync(()=>{  
     const component = fixture.componentInstance;
