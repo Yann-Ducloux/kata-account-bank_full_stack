@@ -23,8 +23,8 @@ export class AccountBankComponent implements OnInit {
       decouvert: ['', [Validators.required]],
     });
   }
-  listErrorSolde: String[]= [];
-  listErrorDecouvert: String[]= [];
+  listErrorSolde: string[]= [];
+  listErrorDecouvert: string[]= [];
   toHome(){
     this.router.navigate(['/welcome']);
   }
@@ -44,8 +44,8 @@ export class AccountBankComponent implements OnInit {
     return champ !=null && champ != "" && !isNaN(Number(champ))
     && Number(champ)>=0 && Number(champ)<=1000000000;
   }
-  recupMessageError(champ: string) :  String[]{
-    var listError:String[] = [];
+  recupMessageError(champ: string) :  string[]{
+    let listError:string[] = [];
     if(champ ==null || champ == "" ) {
       listError.push("le champs n'est pas remplit");
     } else if(isNaN(Number(champ))){
@@ -60,7 +60,7 @@ export class AccountBankComponent implements OnInit {
     return ctrl !== null && !ctrl.valid && ctrl.dirty && isNaN(Number(field));
   }
   envoieDonnee() {
-    var accountBankRequestDTO = new AccountBankRequestDTO(this.accountBankForm.get('solde')?.value,this.accountBankForm.get('decouvert')?.value);
+    let accountBankRequestDTO = new AccountBankRequestDTO(this.accountBankForm.get('solde')?.value,this.accountBankForm.get('decouvert')?.value);
     this.apiService.createAccountBank(accountBankRequestDTO).subscribe({
       next: (response) => {
       this.toHome();

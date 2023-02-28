@@ -61,15 +61,15 @@ export class OperationComponent implements OnInit {
   controleChampInputTypeOperation(): boolean | undefined {
     return this.operationForm.get('typeOperation')?.value == "DEPOSIT" || this.operationForm.get('typeOperation')?.value == "WITHDRAWAL";
   }
-  recupChampInputError(control: boolean | undefined): String[] {
-    var listError: String[] = [];
+  recupChampInputError(control: boolean | undefined): string[] {
+    let listError: string[] = [];
     if (!control) {
       listError.push("le champs n'est pas remplit");
     }
     return listError;
   }
-  recupChampSommeError(): String[] {
-    var listError: String[] = [];
+  recupChampSommeError(): string[] {
+    let listError: string[] = [];
     if (this.operationForm.get('somme')?.value == null || this.operationForm.get('somme')?.value == "") {
       listError.push("le champs n'est pas remplit");
     } else if (isNaN(Number(this.operationForm.get('somme')?.value))) {
@@ -84,7 +84,7 @@ export class OperationComponent implements OnInit {
     return ctrl !== null && !ctrl.valid && ctrl.dirty && isNaN(Number(field));
   }
   envoieDonnee() {
-    var operationRequestDTO = new OperationRequestDTO(this.operationForm.get('accountBankId')?.value, Number(this.operationForm.get('somme')?.value), this.operationForm.get('typeOperation')?.value);
+    let operationRequestDTO = new OperationRequestDTO(this.operationForm.get('accountBankId')?.value, Number(this.operationForm.get('somme')?.value), this.operationForm.get('typeOperation')?.value);
     this.apiService.nouvelleOperation(operationRequestDTO).subscribe({
       next: (response) => {
         this.toHome();

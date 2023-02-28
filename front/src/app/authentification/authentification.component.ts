@@ -19,8 +19,8 @@ export class AuthentificationComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
     });
   }
-  listErrorMail: String[]= [];
-  listErrorPassword: String[]= [];
+  listErrorMail: string[]= [];
+  listErrorPassword: string[]= [];
   private readonly emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
   ngOnInit(): void {
   }
@@ -35,15 +35,15 @@ export class AuthentificationComponent implements OnInit {
       this.listErrorPassword = this.recupMessageError(this.authentificationForm.get('password')?.value);
     }
   }
-  recupMailMessageError() : String[]{
-    var listError:String[] = [];
+  recupMailMessageError() : string[]{
+    let listError:string[] = [];
     if(this.authentificationForm.get('email')?.value == "") {
       listError.push("le champs n'est pas remplit");
     } else if(this.isInvalidAndDirty('email')){
       if(this.verifyChamp('email', 'pattern')) {
         listError.push("Erreur pattern mail");
       }
-      var mail:String = this.authentificationForm.get('email')?.value;
+      let mail:string = this.authentificationForm.get('email')?.value;
       if(mail.length<6 || mail.length>30) {
         listError.push("la taille du champs doit être compris entre 6 et 30");
       }
@@ -51,15 +51,15 @@ export class AuthentificationComponent implements OnInit {
     return listError;
   }
   controleChampMail() : boolean{
-    var mail:String = this.authentificationForm.get('email')?.value;
+    var mail:string = this.authentificationForm.get('email')?.value;
     return (this.authentificationForm.get('email')?.value != "" &&
      !this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
   }
   controleChamp(champ: string) :  boolean{
     return (champ !=null && champ != "" && champ.length>=6 && champ.length<=30);
   }
-  recupMessageError(champ: string) :  String[]{
-    var listError:String[] = [];
+  recupMessageError(champ: string) :  string[]{
+    let listError:string[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");
     } else if(champ.length<6 || champ.length>30) {
@@ -69,7 +69,7 @@ export class AuthentificationComponent implements OnInit {
   }
 
   envoieDonnee() {
-    var infoUtilisateur = new InfoUtilisateur(this.authentificationForm.get('email')?.value, 
+    let infoUtilisateur = new InfoUtilisateur(this.authentificationForm.get('email')?.value, 
     this.authentificationForm.get('password')?.value);
   this.apiService.authentification(infoUtilisateur).subscribe({
       next: (response) => {

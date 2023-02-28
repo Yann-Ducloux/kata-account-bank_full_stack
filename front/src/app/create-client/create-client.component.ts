@@ -10,7 +10,7 @@ import { ApiService } from '../services/api.service';
   templateUrl: './create-client.component.html',
   styleUrls: ['./create-client.component.scss']
 })
-export class CreateClientComponent implements OnInit {
+export class CreateClientComponent {
   public userForm: FormGroup;
   constructor(private formBuilder: FormBuilder, private apiService: ApiService, private router: Router) { 
     this.userForm = formBuilder.group({
@@ -20,13 +20,11 @@ export class CreateClientComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
     });
   }
-  listErrorMail: String[]= [];
-  listErrorNom: String[]= [];
-  listErrorPrenom: String[]= [];
-  listErrorPassword: String[]= [];
+  listErrorMail: string[]= [];
+  listErrorNom: string[]= [];
+  listErrorPrenom: string[]= [];
+  listErrorPassword: string[]= [];
   private readonly emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-  ngOnInit(): void {
-  }
   onFormSubmitUser() {
     this.listErrorMail = [];
     this.listErrorNom = [];
@@ -46,7 +44,7 @@ export class CreateClientComponent implements OnInit {
   }
 
   controleChampMail() : boolean {
-    var mail:String = this.userForm.get('email')?.value;
+    let mail:string = this.userForm.get('email')?.value;
     return (!this.verifyChamp('email', 'pattern')  && mail.length>=6 && mail.length<=30);      
   }
 
@@ -54,23 +52,23 @@ export class CreateClientComponent implements OnInit {
     return (champ !=null && champ != "" && champ.length>=minLength && champ.length<=30);
   }
 
-  recupMailMessageError() : String[]{
-    var listError:String[] = [];
+  recupMailMessageError() : string[]{
+    let listError: string[] = [];
     if(this.userForm.get('email')?.value == "") {
       listError.push("le champs n'est pas remplit");
     } else if(this.isInvalidAndDirty('email')){
       if(this.verifyChamp('email', 'pattern')) {
         listError.push("Erreur pattern mail");
       }
-      var mail:String = this.userForm.get('email')?.value;
+      let mail:string = this.userForm.get('email')?.value;
       if(mail.length<6 || mail.length>30) {
         listError.push("la taille du champs doit être compris entre 6 et 30");
       }
     }
     return listError;
   }
-  recupChampMessageError(champ: string, minLength:number) :  String[]{
-    var listError:String[] = [];
+  recupChampMessageError(champ: string, minLength:number) :  string[]{
+    let listError:string[] = [];
     if(champ ==null || champ == "") {
       listError.push("le champs n'est pas remplit");
     } else if(champ.length<minLength || champ.length>30) {
@@ -80,7 +78,7 @@ export class CreateClientComponent implements OnInit {
   }
 
   envoieDonnee() {
-    var client = new ClientFullDTO(this.userForm.get('email')?.value, 
+    let client = new ClientFullDTO(this.userForm.get('email')?.value, 
     this.userForm.get('nom')?.value,
     this.userForm.get('prenom')?.value,
     this.userForm.get('password')?.value);

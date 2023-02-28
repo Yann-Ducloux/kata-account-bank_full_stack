@@ -37,7 +37,7 @@ export class WelcomeComponent implements OnInit {
     this.router.navigate(['/accountBank']);
   }
   goToOperation(){
-    var accountBankIds:number[]=[];
+    let accountBankIds:number[]=[];
     this.accountBankResponse.forEach(accountBank => {
       if( accountBank!=null && accountBank.id!=null) {
         accountBankIds.push(accountBank.id);

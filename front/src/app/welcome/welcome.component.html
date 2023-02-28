@@ -21,7 +21,8 @@
 </div>
 <br>
 <div class="container" *ngIf="this.accountBankResponse.length>0">
-<table mat-table [dataSource]="accountBankResponse" class="mat-elevation-z8 account-table">
+<table mat-table [dataSource]="accountBankResponse" class="mat-elevation-z8 account-table">  
+  <caption>Table of account bank</caption>
     <!-- Numéro Column -->
     <ng-container matColumnDef="numero">
       <th mat-header-cell *matHeaderCellDef><h3>Numéro de compte</h3></th>
